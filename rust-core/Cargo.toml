@@ -1,0 +1,38 @@
+[package]
+name = "rust-core"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+ratatui = { version = "0.29", features = ["all-widgets"] }
+crossterm = { version = "0.28", features = ["event-stream"] }
+tokio = { version = "1", features = ["full"] }
+anyhow = "1"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+walkdir = "2"
+ignore = "0.4"
+sqlx = { version = "0.8", features = ["runtime-tokio", "sqlite"] }
+uuid = { version = "1", features = ["v4"] }
+chrono = { version = "0.4", features = ["serde"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json", "fmt"] }
+toml = "0.8"
+pyo3 = { version = "0.24", optional = true }
+ts-bridge = { path = "../ts-bridge", optional = true }
+py-extensions = { path = "../py-extensions", optional = true }
+diffy = "0.4"
+tree-sitter = "0.24"
+tree-sitter-rust = "0.23"
+tree-sitter-typescript = "0.23"
+tree-sitter-python = "0.23"
+git2 = "0.19"
+base64 = "0.22"
+
+[dev-dependencies]
+tempfile = "3"
+
+[features]
+default = []
+python = ["pyo3", "py-extensions"]
+typescript = ["ts-bridge"]
