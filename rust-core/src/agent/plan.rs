@@ -1,6 +1,6 @@
 //! Plan → Review → Approve → Execute workflow.
 //!
-//! The agent generates an editable plan (Vec<Step> with description, tool, status).
+//! The agent generates an editable plan (`Vec<Step>` with description, tool, status).
 //! Plans are displayed in the plan_pane via JSON messages to the TUI.
 //! User approves/rejects/edits via hotkeys (a/r/e).
 //! Only approved steps execute.

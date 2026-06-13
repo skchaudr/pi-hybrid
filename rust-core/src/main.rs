@@ -673,7 +673,7 @@ fn main() -> anyhow::Result<()> {
     result
 }
 
-/// Parse --config <PATH> from CLI arguments.
+/// Parse `--config <PATH>` from CLI arguments.
 fn parse_config_path(args: &[String]) -> Option<std::path::PathBuf> {
     let mut iter = args.iter();
     while let Some(arg) = iter.next() {
@@ -760,7 +760,7 @@ fn run(
     Ok(())
 }
 
-/// Parse --log-level <LEVEL> from CLI arguments.
+/// Parse `--log-level <LEVEL>` from CLI arguments.
 fn parse_log_level(args: &[String]) -> Option<&str> {
     let mut iter = args.iter();
     while let Some(arg) = iter.next() {

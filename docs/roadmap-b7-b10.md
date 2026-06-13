@@ -38,7 +38,7 @@
   - Code conventions (edition 2024, clippy, fmt)
   - Test patterns, mocking, fixtures
   - PR checklist
-- [ ] **Public API docs** (rustdoc pass)
+- [x] **Public API docs** (rustdoc pass)
   - `cargo doc --document-private-items` — no missing docs warnings
   - Module-level docs for every crate and module
   - Examples for key public types

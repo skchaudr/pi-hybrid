@@ -340,7 +340,7 @@ fn parse_edge(line: &str) -> Option<DiagramEdge> {
     })
 }
 
-/// Extract node definitions from edge endpoints (e.g., A[Label] --> B{Label}).
+/// Extract node definitions from edge endpoints (e.g., `A[Label] --> B{Label}`).
 fn extract_nodes_from_edge(edge: &DiagramEdge, nodes: &mut Vec<DiagramNode>) {
     for endpoint in [&edge.from, &edge.to] {
         // Skip if this node is already in the list
@@ -361,7 +361,7 @@ fn extract_nodes_from_edge(edge: &DiagramEdge, nodes: &mut Vec<DiagramNode>) {
     }
 }
 
-/// Extract the node ID from an endpoint string like "A[Label]" -> "A".
+/// Extract the node ID from an endpoint string like `A[Label]` -> `A`.
 fn extract_node_id(endpoint: &str) -> String {
     let trimmed = endpoint.trim();
     if let Some(pos) = trimmed.find('[') {
