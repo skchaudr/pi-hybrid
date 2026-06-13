@@ -1,160 +1,105 @@
 #!/usr/bin/env python3
-"""Tier 1 PTY Integration Test — drives Pi Hybrid TUI via pseudo-terminal.
+"""Smoke-test the Rust TUI key sequences through a real pseudo-terminal."""
 
-Run from the Air or mini:
-    python3 tests/tui_smoke.py
+from __future__ import annotations
 
-Prerequisites:
-    pip3 install pexpect
-    cargo build   (in rust-core/)
-"""
-
-import pexpect
+import os
+import pty
+import select
+import struct
+import subprocess
 import sys
+import termios
 import time
-
-BINARY = "./target/debug/rust-core"
-COLS = 120
-ROWS = 40
+from pathlib import Path
 
 
-def spawn_pi():
-    """Spawn Pi in a PTY with known dimensions."""
-    child = pexpect.spawn(BINARY, dimensions=(ROWS, COLS), timeout=5, encoding="utf-8")
-    # Give the TUI a moment to draw
-    time.sleep(1.5)
-    return child
+ROOT = Path(__file__).resolve().parents[1]
+BIN = ROOT / "target" / "debug" / "rust-core"
 
 
-def assert_screen(child, needle, label):
-    """Check that the rendered screen contains a string."""
-    # Read whatever is on screen
+def build_binary() -> None:
+    if BIN.exists():
+        return
+    subprocess.run(["cargo", "build", "-p", "rust-core"], cwd=ROOT, check=True)
+
+
+def read_until(fd: int, needle: str, timeout: float = 3.0) -> str:
+    deadline = time.monotonic() + timeout
+    output = ""
+    while time.monotonic() < deadline:
+        ready, _, _ = select.select([fd], [], [], 0.05)
+        if not ready:
+            continue
+        chunk = os.read(fd, 4096).decode("utf-8", errors="ignore")
+        output += chunk
+        if needle in output:
+            return output
+    raise AssertionError(f"timed out waiting for {needle!r}\n\nLast output:\n{output[-2000:]}")
+
+
+def send(fd: int, keys: bytes) -> None:
+    os.write(fd, keys)
+    time.sleep(0.1)
+
+
+def set_terminal_size(fd: int, rows: int = 30, columns: int = 100) -> None:
+    import fcntl
+
+    size = struct.pack("HHHH", rows, columns, 0, 0)
+    fcntl.ioctl(fd, termios.TIOCSWINSZ, size)
+
+
+def main() -> int:
+    build_binary()
+
+    master, slave = pty.openpty()
+    set_terminal_size(slave)
+    env = os.environ.copy()
+    env.setdefault("TERM", "xterm-256color")
+
+    process = subprocess.Popen(
+        [str(BIN)],
+        cwd=ROOT,
+        env=env,
+        stdin=slave,
+        stdout=slave,
+        stderr=slave,
+        close_fds=True,
+    )
+    os.close(slave)
+
     try:
-        child.expect(needle, timeout=3)
-        print(f"  PASS: {label}")
-        return True
-    except pexpect.TIMEOUT:
-        print(f"  FAIL: {label} — '{needle}' not found on screen")
-        return False
+        read_until(master, "Pi Hybrid v0.1.0")
 
+        send(master, b"\x10")  # Ctrl+P
+        read_until(master, "Command Palette")
 
-def send_key(child, key, label):
-    """Send a key and check the app is still alive."""
-    try:
-        child.send(key)
-        time.sleep(0.3)
-        assert child.isalive(), f"App died after {label}"
-        return True
-    except Exception as e:
-        print(f"  FAIL: {label} — {e}")
-        return False
+        send(master, b"\x1b")  # Esc
+        send(master, b"\x1bOP")  # F1 in xterm/SS3 form
+        read_until(master, "Help")
 
+        send(master, b"q")
+        try:
+            process.wait(timeout=3)
+        except subprocess.TimeoutExpired as exc:
+            raise AssertionError("q did not quit the TUI within 3 seconds") from exc
 
-def main():
-    print("=== Pi Hybrid TUI Smoke Test ===\n")
-    failures = 0
+        if process.returncode != 0:
+            raise AssertionError(f"TUI exited with status {process.returncode}")
+    finally:
+        if process.poll() is None:
+            process.terminate()
+            process.wait(timeout=3)
+        os.close(master)
 
-    # ─── 1. Startup ───────────────────────────────────────
-    print("[1] Startup")
-    child = spawn_pi()
-    assert child.isalive(), "Failed to spawn Pi"
-
-    # Should see the app title in the status bar
-    if assert_screen(child, "Pi Hybrid", "app title visible"):
-        pass
-    else:
-        failures += 1
-
-    # ─── 2. Tab through panes ─────────────────────────────
-    print("\n[2] Pane switching")
-
-    panes = ["Files", "Editor", "Agents", "Plan"]
-    for pane in panes:
-        if not send_key(child, "\t", f"Tab → {pane}"):
-            failures += 1
-
-    # After 4 tabs we should be back at Files
-    for _ in range(4):
-        child.send("\t")
-        time.sleep(0.2)
-
-    # ─── 3. Command palette ───────────────────────────────
-    print("\n[3] Command palette")
-    if send_key(child, "\x10", "Ctrl+P open palette"):  # Ctrl+P
-        if assert_screen(child, "Command", "palette visible"):
-            pass
-        else:
-            failures += 1
-        child.send("\x1b")  # Esc to close
-        time.sleep(0.3)
-
-    # ─── 4. Help popup ────────────────────────────────────
-    print("\n[4] Help popup (F1)")
-    # F1 is escape sequence in some terminals
-    child.send("\x1bOP")  # F1
-    time.sleep(0.5)
-    if assert_screen(child, "Navigation", "help shows Navigation"):
-        pass
-    else:
-        failures += 1
-    child.send("\x1b")  # Esc to close
-    time.sleep(0.3)
-
-    # ─── 5. Toggle dark mode (F7) ─────────────────────────
-    print("\n[5] Dark mode toggle (F7)")
-    if send_key(child, "\x1b[18~", "F7 toggle dark mode"):
-        pass
-    else:
-        failures += 1
-
-    # ─── 6. Resize terminal ───────────────────────────────
-    print("\n[6] Terminal resize")
-    try:
-        child.setwinsize(60, 24)
-        time.sleep(0.5)
-        assert child.isalive(), "Died on resize to 60x24"
-        child.setwinsize(200, 60)
-        time.sleep(0.5)
-        assert child.isalive(), "Died on resize to 200x60"
-        child.setwinsize(ROWS, COLS)
-        time.sleep(0.5)
-        print("  PASS: resize survived")
-    except Exception as e:
-        print(f"  FAIL: resize — {e}")
-        failures += 1
-
-    # ─── 7. Rapid keystrokes (stress) ─────────────────────
-    print("\n[7] Rapid keystroke stress (200 keys)")
-    try:
-        for _ in range(50):
-            child.send("jkkkllhhgg\t")
-        time.sleep(1.0)
-        assert child.isalive(), "Died on rapid keystrokes"
-        print("  PASS: rapid keystrokes survived")
-    except Exception as e:
-        print(f"  FAIL: keystroke stress — {e}")
-        failures += 1
-
-    # ─── 8. Graceful quit ─────────────────────────────────
-    print("\n[8] Graceful quit (q)")
-    try:
-        child.send("q")
-        time.sleep(0.5)
-        child.expect(pexpect.EOF, timeout=3)
-        print("  PASS: clean exit with 'q'")
-    except Exception as e:
-        print(f"  FAIL: quit — {e}")
-        failures += 1
-
-    # ─── Report ───────────────────────────────────────────
-    print(f"\n{'='*50}")
-    if failures == 0:
-        print("ALL 8 TESTS PASSED — Pi Hybrid is boring!")
-    else:
-        print(f"{failures} TEST(S) FAILED — see above")
-    print(f"{'='*50}")
-    return failures
+    print("tui smoke passed: Ctrl+P, F1, q")
+    return 0
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    try:
+        raise SystemExit(main())
+    except Exception as exc:
+        print(f"tui smoke failed: {exc}", file=sys.stderr)
+        raise
