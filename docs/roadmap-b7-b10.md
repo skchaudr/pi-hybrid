@@ -54,7 +54,7 @@
 
 > *Runs on M5 and M1, in any terminal, at any size.*
 
-- [ ] **M1 Mac Mini validation**
+- [x] **M1 Mac Mini validation**
   - `cargo build --release` succeeds
   - Full test suite passes
   - TUI renders correctly (screenshot comparison)
