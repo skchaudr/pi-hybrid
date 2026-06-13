@@ -1303,11 +1303,6 @@ dependencies = [
 [[package]]
 name = "py-extensions"
 version = "0.1.0"
-dependencies = [
- "anyhow",
- "pyo3",
- "serde_json",
-]
 
 [[package]]
 name = "pyo3"
