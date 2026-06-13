@@ -33,7 +33,7 @@
   - Config file format, env vars, precedence
   - CLI flags reference
   - Troubleshooting: common failures + fixes
-- [ ] **Contributor guide** (`docs/contributing.md`)
+- [x] **Contributor guide** (`docs/contributing.md`)
   - How to add a provider / plugin / tool / TUI pane
   - Code conventions (edition 2024, clippy, fmt)
   - Test patterns, mocking, fixtures
