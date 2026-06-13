@@ -61,7 +61,7 @@
 - [ ] **Terminal compatibility matrix**
   - Ghostty, iTerm2, Terminal.app, Kitty, tmux, VS Code terminal
   - Verify: colors, keybindings, resize behavior
-- [ ] **Terminal resize handling**
+- [x] **Terminal resize handling**
   - 80×24, 120×40, ultra-wide, ultra-narrow
   - No panics, no rendering artifacts
 - [ ] **Feature flags**

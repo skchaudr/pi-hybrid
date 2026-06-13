@@ -988,6 +988,26 @@ mod tests {
     }
 
     #[test]
+    fn layout_stays_within_bounds_at_common_terminal_sizes() {
+        let toggles = tui::toggles::Toggles::default();
+        for area in [
+            Rect::new(0, 0, 80, 24),
+            Rect::new(0, 0, 120, 40),
+            Rect::new(0, 0, 180, 48),
+            Rect::new(0, 0, 40, 24),
+        ] {
+            let layout = layout_for(area, &toggles);
+            for rect in [layout.files, layout.editor, layout.agents, layout.plan] {
+                assert!(rect.x >= area.x);
+                assert!(rect.y >= area.y);
+                assert!(rect.x + rect.width <= area.x + area.width);
+                assert!(rect.y + rect.height <= area.y + area.height);
+            }
+            assert_eq!(layout.plan.y, area.height.saturating_sub(7));
+        }
+    }
+
+    #[test]
     fn app_toggles_panes_and_palette_filters_commands() {
         let mut app = App::new(
             PathBuf::from("."),
