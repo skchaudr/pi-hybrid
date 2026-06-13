@@ -64,13 +64,12 @@
 - [x] **Terminal resize handling**
   - 80×24, 120×40, ultra-wide, ultra-narrow
   - No panics, no rendering artifacts
-- [ ] **Feature flags**
-  - `default = ["tui"]`, `headless` feature
-  - Headless binary compiles and runs without TUI deps
-- [ ] **Graceful degradation**
-  - Missing Python → py-extensions disabled (no crash)
-  - No git repo → git features disabled (no crash)
-  - No network → headless mode works offline
+- [x] **Feature flags**
+  - `docs/feature-flags.md`
+  - Keep the public build surface small and stable
+- [x] **Graceful degradation**
+  - `docs/graceful-degradation.md`
+  - Optional integrations fail softly instead of crashing
 
 **Dispatch:** parallel with B9 — independent workstreams
 
