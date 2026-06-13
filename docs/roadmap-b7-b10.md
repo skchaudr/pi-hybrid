@@ -42,7 +42,7 @@
   - `cargo doc --document-private-items` — no missing docs warnings
   - Module-level docs for every crate and module
   - Examples for key public types
-- [ ] **Clone-to-run verification**
+- [x] **Clone-to-run verification**
   - `git clone && cargo build && cargo test` succeeds in <10 min
   - Runbook covers every step
 
