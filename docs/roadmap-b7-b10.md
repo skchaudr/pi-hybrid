@@ -28,7 +28,7 @@
   - Crate responsibilities
   - Key design decisions and tradeoffs
   - Provider/plugin/tool extension points
-- [ ] **Operator runbook** (`docs/operator.md`)
+- [x] **Operator runbook** (`docs/operator.md`)
   - Install, build, run
   - Config file format, env vars, precedence
   - CLI flags reference
