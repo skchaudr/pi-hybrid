@@ -23,7 +23,7 @@
 
 > *Control point. Future agents must not rediscover this context.*
 
-- [ ] **Architecture map** (`docs/architecture.md`)
+- [x] **Architecture map** (`docs/architecture.md`)
   - Data flow diagram (ascii or mermaid)
   - Crate responsibilities
   - Key design decisions and tradeoffs
