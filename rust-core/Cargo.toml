@@ -18,7 +18,7 @@ chrono = { version = "0.4", features = ["serde"] }
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter", "json", "fmt"] }
 toml = "0.8"
-pyo3 = { version = "0.24", optional = true }
+pyo3 = { version = "0.29", optional = true }
 ts-bridge = { path = "../ts-bridge", optional = true }
 py-extensions = { path = "../py-extensions", optional = true }
 diffy = "0.4"
@@ -26,7 +26,7 @@ tree-sitter = "0.24"
 tree-sitter-rust = "0.23"
 tree-sitter-typescript = "0.23"
 tree-sitter-python = "0.23"
-git2 = "0.19"
+git2 = "0.21"
 base64 = "0.22"
 
 [dev-dependencies]
