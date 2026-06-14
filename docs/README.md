@@ -27,3 +27,8 @@ cargo run -p rust-core
 
 The TUI opens an alternate-screen Ratatui interface with Files, Editor, Agents,
 and Plan/Approval panes. Press `tab` to cycle the active pane and `q` to quit.
+
+## Performance
+
+See [benchmarks.md](benchmarks.md) for the Criterion benchmark harness,
+baseline template, and CI regression gate notes.

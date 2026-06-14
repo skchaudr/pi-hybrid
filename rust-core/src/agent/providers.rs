@@ -81,6 +81,17 @@ pub fn glm_config() -> ProviderConfig {
     .with_description("GLM/Zhipu AI — ChatGLM and CodeGeeX models")
 }
 
+/// Built-in provider: Ollama (local OpenAI-compatible API).
+pub fn ollama_config() -> ProviderConfig {
+    ProviderConfig::new(
+        "ollama",
+        "http://127.0.0.1:9000/v1",
+        "none",
+        "qwen2.5-coder:7b",
+    )
+    .with_description("Ollama local models — qwen2.5-coder:7b, qwen2.5-coder:14b (set OLLAMA_HOST)")
+}
+
 /// A registry of all configured LLM providers.
 #[derive(Debug, Default)]
 pub struct ProviderRegistry {
@@ -106,10 +117,11 @@ impl ProviderRegistry {
         registry
     }
 
-    /// Register the built-in DeepSeek and GLM providers.
+    /// Register the built-in DeepSeek, GLM, and Ollama providers.
     pub fn register_builtins(&mut self) {
         self.register(deepseek_config());
         self.register(glm_config());
+        self.register(ollama_config());
     }
 
     /// Register a provider in the registry.
@@ -193,8 +205,12 @@ impl ProviderRegistry {
         if self.active_provider.as_deref() == Some(name) {
             self.active_provider = None;
             // Try to select another provider
-            if let Some(next) = self.providers.keys().find(|k| *k != name) {
-                self.active_provider = Some(next.clone());
+            if let Some(next) = self
+                .list_names()
+                .into_iter()
+                .find(|candidate| *candidate != name)
+            {
+                self.active_provider = Some(next.to_string());
             }
         }
         self.providers.remove(name)
@@ -239,7 +255,11 @@ mod tests {
         assert_eq!(glm.api_key_env, "PI_GLM_API_KEY");
         assert_eq!(glm.default_model, "glm-4-flash");
 
-        assert_eq!(registry.len(), 2);
+        let ollama = registry.get("ollama").unwrap();
+        assert_eq!(ollama.api_key_env, "none");
+        assert_eq!(ollama.default_model, "qwen2.5-coder:7b");
+
+        assert_eq!(registry.len(), 3);
     }
 
     #[test]
@@ -309,6 +329,6 @@ mod tests {
         let removed = registry.unregister("deepseek");
         assert!(removed.is_some());
         assert_eq!(registry.active_provider_name(), Some("glm"));
-        assert_eq!(registry.len(), 1);
+        assert_eq!(registry.len(), 2);
     }
 }

@@ -236,6 +236,21 @@ Config loader overrides:
 | `PI_LOG_LEVEL` | `logging.level` |
 | `PI_DEEPSEEK_KEY` | Built-in config value for `providers.deepseek` |
 | `PI_GLM_KEY` | Built-in config value for `providers.glm` |
+| `OLLAMA_HOST` | `providers.ollama.api_base` host (default `127.0.0.1:9000`) |
+
+Local Ollama models (placeholder provider `ollama`, no API key):
+
+| Model | Notes |
+| --- | --- |
+| `qwen2.5-coder:7b` | Default; good on Mac mini and MacBook Air |
+| `qwen2.5-coder:14b` | Heavier; Mac mini primary |
+| Gemma 12B (Google Eloquence) | Not Ollama; add a provider when wired |
+
+```sh
+export OLLAMA_HOST=127.0.0.1:9000
+ollama pull qwen2.5-coder:7b
+PI_PROVIDER=ollama cargo run -p rust-core -- --validate-config
+```
 
 Bridge command fallback:
 

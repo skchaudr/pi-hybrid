@@ -6,6 +6,7 @@
 //! - `PI_MAX_TURNS` → `config.agent.max_turns`
 //! - `PI_LOG_LEVEL` → `config.logging.level`
 //! - `PI_DEEPSEEK_API_KEY`, `PI_GLM_API_KEY` → per-provider API key overrides
+//! - `OLLAMA_HOST` → `providers.ollama.api_base` (e.g. `127.0.0.1:9000`)
 
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
@@ -150,6 +151,18 @@ impl PiConfig {
             } else {
                 debug!("PI_GLM_API_KEY set but no 'glm' provider configured");
             }
+        }
+        if let Ok(host) = std::env::var("OLLAMA_HOST")
+            && !host.is_empty()
+            && let Some(provider) = config.providers.get_mut("ollama")
+        {
+            let api_base = if host.starts_with("http://") || host.starts_with("https://") {
+                format!("{host}/v1")
+            } else {
+                format!("http://{host}/v1")
+            };
+            info!(api_base = %api_base, "OLLAMA_HOST override");
+            provider.api_base = api_base;
         }
     }
 
@@ -478,6 +491,17 @@ pub fn builtin_providers() -> HashMap<String, ProviderConfig> {
         },
     );
 
+    map.insert(
+        "ollama".to_string(),
+        ProviderConfig {
+            name: "Ollama (local)".to_string(),
+            api_base: "http://127.0.0.1:9000/v1".to_string(),
+            api_key_env: Some("none".to_string()),
+            default_model: "qwen2.5-coder:7b".to_string(),
+            api_key_value: None,
+        },
+    );
+
     map
 }
 
@@ -507,6 +531,7 @@ pub fn generate_default_toml() -> String {
 #   PI_LOG_LEVEL   → logging.level
 #   PI_DEEPSEEK_API_KEY → deepseek API key
 #   PI_GLM_API_KEY     → GLM API key
+#   OLLAMA_HOST        → ollama API host (default 127.0.0.1:9000)
 
 # Default LLM provider (must match a key in [providers])
 provider = "deepseek"
@@ -548,6 +573,18 @@ name = "GLM (ZhipuAI)"
 api_base = "https://open.bigmodel.cn/api/paas/v4"
 api_key_env = "PI_GLM_API_KEY"
 default_model = "glm-4-flash"
+
+# ── Provider: Ollama (local, Mac mini / MacBook Air) ─────────────────
+# Set OLLAMA_HOST=127.0.0.1:9000 in the shell (see ~/.zshlocal).
+# Switch default_model to any pulled model:
+#   qwen2.5-coder:7b   — fast, both machines
+#   qwen2.5-coder:14b  — heavier, Mac mini primary
+# Gemma 12B via Google Eloquence is separate (not Ollama); add when wired.
+[providers.ollama]
+name = "Ollama (local)"
+api_base = "http://127.0.0.1:9000/v1"
+api_key_env = "none"
+default_model = "qwen2.5-coder:7b"
 "#
     .to_string()
 }
@@ -556,6 +593,9 @@ default_model = "glm-4-flash"
 mod tests {
     use super::*;
     use std::io::Write;
+    use std::sync::Mutex;
+
+    static ENV_LOCK: Mutex<()> = Mutex::new(());
 
     // ── Helpers ──────────────────────────────────────────────────────
 
@@ -601,10 +641,11 @@ mod tests {
 
     #[test]
     fn default_config_has_builtin_providers() {
-        let cfg = config_with_defaults();
+        let cfg = PiConfig::default();
         assert_eq!(cfg.provider, "deepseek");
         assert!(cfg.providers.contains_key("deepseek"));
         assert!(cfg.providers.contains_key("glm"));
+        assert!(cfg.providers.contains_key("ollama"));
         assert_eq!(cfg.agent.max_turns, 50);
         assert_eq!(cfg.agent.default_model, "deepseek-chat");
     }
@@ -620,6 +661,10 @@ mod tests {
         let glm = providers.get("glm").unwrap();
         assert_eq!(glm.name, "GLM (ZhipuAI)");
         assert_eq!(glm.default_model, "glm-4-flash");
+
+        let ollama = providers.get("ollama").unwrap();
+        assert_eq!(ollama.api_key_env.as_deref(), Some("none"));
+        assert_eq!(ollama.default_model, "qwen2.5-coder:7b");
     }
 
     // ── Test: validation rejects missing provider ────────────────────
@@ -864,6 +909,7 @@ mod tests {
 
     #[test]
     fn env_override_max_turns() {
+        let _guard = ENV_LOCK.lock().unwrap();
         unsafe { std::env::set_var("PI_MAX_TURNS", "42") };
         let mut cfg = config_with_defaults();
         PiConfig::apply_env_overrides(&mut cfg);
@@ -873,6 +919,7 @@ mod tests {
 
     #[test]
     fn env_override_max_turns_invalid_ignored() {
+        let _guard = ENV_LOCK.lock().unwrap();
         unsafe { std::env::set_var("PI_MAX_TURNS", "not-a-number") };
         let mut cfg = config_with_defaults();
         PiConfig::apply_env_overrides(&mut cfg);

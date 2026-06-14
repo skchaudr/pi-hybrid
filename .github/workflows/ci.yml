@@ -42,7 +42,53 @@ jobs:
             py-extensions -> target
 
       - name: Build workspace
-        run: cargo build --workspace --verbose
+        run: cargo build --workspace --release --verbose
+
+      - name: Regression gates
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          binary="target/release/rust-core"
+          if [[ ! -x "$binary" ]]; then
+            echo "::error::Expected release binary at $binary"
+            exit 1
+          fi
+
+          if [[ "$RUNNER_OS" == "macOS" ]]; then
+            binary_size=$(stat -f %z "$binary")
+          else
+            binary_size=$(stat -c %s "$binary")
+          fi
+
+          max_size=$((6 * 1024 * 1024))
+          if (( binary_size >= max_size )); then
+            echo "::error::Release binary is ${binary_size} bytes; expected < ${max_size} bytes"
+            exit 1
+          fi
+          echo "Release binary size: ${binary_size} bytes"
+
+          start_ms=$(python3 - <<'PY'
+          import time
+          print(time.perf_counter_ns() // 1_000_000)
+          PY
+          )
+          printf '\n' | \
+            PI_DEEPSEEK_API_KEY=dummy PI_GLM_API_KEY=dummy \
+            "$binary" --validate-config >/tmp/rust-core-startup.txt
+          end_ms=$(python3 - <<'PY'
+          import time
+          print(time.perf_counter_ns() // 1_000_000)
+          PY
+          )
+          elapsed_ms=$((end_ms - start_ms))
+
+          if (( elapsed_ms >= 500 )); then
+            echo "::error::Cold startup took ${elapsed_ms}ms; expected < 500ms"
+            cat /tmp/rust-core-startup.txt
+            exit 1
+          fi
+          echo "Cold startup: ${elapsed_ms}ms"
 
       - name: Run tests (rust-core + ts-bridge)
         run: cargo test -p rust-core -p ts-bridge --verbose

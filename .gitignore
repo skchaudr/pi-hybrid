@@ -1,6 +1,7 @@
 target/
 .cargo-home/
 rust-core-temp/
+graphify-out/
 *.swp
 *.swo
 .DS_Store
