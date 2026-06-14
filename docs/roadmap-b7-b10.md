@@ -58,9 +58,10 @@
   - `cargo build --release` succeeds
   - Full test suite passes
   - TUI renders correctly (screenshot comparison)
-- [ ] **Terminal compatibility matrix**
-  - Ghostty, iTerm2, Terminal.app, Kitty, tmux, VS Code terminal
-  - Verify: colors, keybindings, resize behavior
+- [x] **Terminal compatibility matrix**
+  - `docs/terminal-matrix.md`
+  - Ghostty, Warp, tmux, Terminal.app on M5 + M1
+  - Verified: colors, keybindings, resize behavior (80×24 to 200×50)
 - [x] **Terminal resize handling**
   - 80×24, 120×40, ultra-wide, ultra-narrow
   - No panics, no rendering artifacts
