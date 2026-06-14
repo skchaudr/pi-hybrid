@@ -5,7 +5,7 @@
 //! - `PI_SESSION_DB` → `config.session.db_path`
 //! - `PI_MAX_TURNS` → `config.agent.max_turns`
 //! - `PI_LOG_LEVEL` → `config.logging.level`
-//! - `PI_DEEPSEEK_KEY`, `PI_GLM_KEY` → per-provider API key overrides
+//! - `PI_DEEPSEEK_API_KEY`, `PI_GLM_API_KEY` → per-provider API key overrides
 
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
@@ -133,22 +133,22 @@ impl PiConfig {
             config.logging.level = val;
         }
         // Per-provider API key overrides.
-        if let Ok(key) = std::env::var("PI_DEEPSEEK_KEY")
+        if let Ok(key) = std::env::var("PI_DEEPSEEK_API_KEY")
             && !key.is_empty()
         {
             if let Some(provider) = config.providers.get_mut("deepseek") {
                 provider.set_api_key(key);
             } else {
-                debug!("PI_DEEPSEEK_KEY set but no 'deepseek' provider configured");
+                debug!("PI_DEEPSEEK_API_KEY set but no 'deepseek' provider configured");
             }
         }
-        if let Ok(key) = std::env::var("PI_GLM_KEY")
+        if let Ok(key) = std::env::var("PI_GLM_API_KEY")
             && !key.is_empty()
         {
             if let Some(provider) = config.providers.get_mut("glm") {
                 provider.set_api_key(key);
             } else {
-                debug!("PI_GLM_KEY set but no 'glm' provider configured");
+                debug!("PI_GLM_API_KEY set but no 'glm' provider configured");
             }
         }
     }
@@ -461,7 +461,7 @@ pub fn builtin_providers() -> HashMap<String, ProviderConfig> {
         ProviderConfig {
             name: "DeepSeek".to_string(),
             api_base: "https://api.deepseek.com/v1".to_string(),
-            api_key_env: Some("PI_DEEPSEEK_KEY".to_string()),
+            api_key_env: Some("PI_DEEPSEEK_API_KEY".to_string()),
             default_model: "deepseek-chat".to_string(),
             api_key_value: None,
         },
@@ -472,7 +472,7 @@ pub fn builtin_providers() -> HashMap<String, ProviderConfig> {
         ProviderConfig {
             name: "GLM (ZhipuAI)".to_string(),
             api_base: "https://open.bigmodel.cn/api/paas/v4".to_string(),
-            api_key_env: Some("PI_GLM_KEY".to_string()),
+            api_key_env: Some("PI_GLM_API_KEY".to_string()),
             default_model: "glm-4-flash".to_string(),
             api_key_value: None,
         },
@@ -505,8 +505,8 @@ pub fn generate_default_toml() -> String {
 #   PI_SESSION_DB  → session.db_path
 #   PI_MAX_TURNS   → agent.max_turns
 #   PI_LOG_LEVEL   → logging.level
-#   PI_DEEPSEEK_KEY → deepseek API key
-#   PI_GLM_KEY     → GLM API key
+#   PI_DEEPSEEK_API_KEY → deepseek API key
+#   PI_GLM_API_KEY     → GLM API key
 
 # Default LLM provider (must match a key in [providers])
 provider = "deepseek"
@@ -539,14 +539,14 @@ default_model = "deepseek-chat"
 [providers.deepseek]
 name = "DeepSeek"
 api_base = "https://api.deepseek.com/v1"
-api_key_env = "PI_DEEPSEEK_KEY"
+api_key_env = "PI_DEEPSEEK_API_KEY"
 default_model = "deepseek-chat"
 
 # ── Provider: GLM (ZhipuAI) ──────────────────────────────────────────
 [providers.glm]
 name = "GLM (ZhipuAI)"
 api_base = "https://open.bigmodel.cn/api/paas/v4"
-api_key_env = "PI_GLM_KEY"
+api_key_env = "PI_GLM_API_KEY"
 default_model = "glm-4-flash"
 "#
     .to_string()
@@ -615,7 +615,7 @@ mod tests {
         let ds = providers.get("deepseek").unwrap();
         assert_eq!(ds.name, "DeepSeek");
         assert_eq!(ds.api_base, "https://api.deepseek.com/v1");
-        assert_eq!(ds.api_key_env.as_deref(), Some("PI_DEEPSEEK_KEY"));
+        assert_eq!(ds.api_key_env.as_deref(), Some("PI_DEEPSEEK_API_KEY"));
 
         let glm = providers.get("glm").unwrap();
         assert_eq!(glm.name, "GLM (ZhipuAI)");
@@ -901,9 +901,9 @@ mod tests {
     #[test]
     fn env_override_deepseek_key() {
         let mut cfg = config_with_defaults();
-        unsafe { std::env::set_var("PI_DEEPSEEK_KEY", "sk-test-123") };
+        unsafe { std::env::set_var("PI_DEEPSEEK_API_KEY", "sk-test-123") };
         PiConfig::apply_env_overrides(&mut cfg);
-        unsafe { std::env::remove_var("PI_DEEPSEEK_KEY") };
+        unsafe { std::env::remove_var("PI_DEEPSEEK_API_KEY") };
         let ds = cfg.providers.get("deepseek").unwrap();
         assert_eq!(ds.api_key_resolved(), Some("sk-test-123".to_string()));
     }
@@ -911,9 +911,9 @@ mod tests {
     #[test]
     fn env_override_glm_key() {
         let mut cfg = config_with_defaults();
-        unsafe { std::env::set_var("PI_GLM_KEY", "glm-test-456") };
+        unsafe { std::env::set_var("PI_GLM_API_KEY", "glm-test-456") };
         PiConfig::apply_env_overrides(&mut cfg);
-        unsafe { std::env::remove_var("PI_GLM_KEY") };
+        unsafe { std::env::remove_var("PI_GLM_API_KEY") };
         let glm = cfg.providers.get("glm").unwrap();
         assert_eq!(glm.api_key_resolved(), Some("glm-test-456".to_string()));
     }
@@ -956,15 +956,15 @@ default_model = "glm-4-flash"
     #[test]
     fn load_with_missing_file_uses_defaults() {
         unsafe {
-            std::env::set_var("PI_DEEPSEEK_KEY", "sk-test");
-            std::env::set_var("PI_GLM_KEY", "glm-test");
+            std::env::set_var("PI_DEEPSEEK_API_KEY", "sk-test");
+            std::env::set_var("PI_GLM_API_KEY", "glm-test");
         }
         let dir = tmp_dir();
         let nonexistent = dir.path().join("does_not_exist.toml");
         let cfg = PiConfig::load(Some(&nonexistent)).unwrap();
         unsafe {
-            std::env::remove_var("PI_DEEPSEEK_KEY");
-            std::env::remove_var("PI_GLM_KEY");
+            std::env::remove_var("PI_DEEPSEEK_API_KEY");
+            std::env::remove_var("PI_GLM_API_KEY");
         }
         assert_eq!(cfg.provider, "deepseek"); // default
         assert_eq!(cfg.agent.max_turns, 50); // default

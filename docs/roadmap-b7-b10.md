@@ -14,7 +14,7 @@
 | B2 | Structured tracing (tracing crate) | ✅ |
 | B3 | Config validation | ✅ |
 | B4 | Graceful shutdown + signal handling | ✅ |
-| B5 | 425-test suite (79% coverage) | ✅ |
+| B5 | 434-test suite (79% coverage) | ✅ |
 | B6 | CI: ubuntu + macos, clippy, fmt, coverage | ✅ |
 
 ---

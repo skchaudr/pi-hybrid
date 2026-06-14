@@ -98,7 +98,7 @@ impl GitManager {
             repo_path,
             repo,
             snapshots: Vec::new(),
-            auto_commit_enabled: true,
+            auto_commit_enabled: false,
             branch_isolation_enabled: true,
             show_status: true,
         }

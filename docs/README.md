@@ -1,16 +1,14 @@
 # Pi Rust-Core Hybrid Workspace
 
-[![CI](https://github.com/<github-user>/<github-repo>/actions/workflows/ci.yml/badge.svg)](https://github.com/<github-user>/<github-repo>/actions/workflows/ci.yml)
+[![CI](https://github.com/skchaudr/pi-hybrid/actions/workflows/ci.yml/badge.svg)](https://github.com/skchaudr/pi-hybrid/actions/workflows/ci.yml)
 
-Phase 0 establishes the workspace foundation for a hybrid Pi agent runtime.
+A Rust terminal UI hybrid agent runtime.
 
 ## Workspace Layout
 
 - `rust-core/` - Rust terminal core with the Ratatui shell UI.
-- `ts-bridge/` - TypeScript bridge crate placeholder.
-- `py-extensions/` - Python extension crate placeholder.
-- `rust-core-temp/` - Reference checkout for Pi agent Rust patterns.
-- `grain-reference/` - Intended reference checkout for Grain agent harness patterns.
+- `ts-bridge/` - TypeScript bridge crate.
+- `py-extensions/` - Python extension crate.
 - `docs/` - Project notes and build instructions.
 
 ## Build
@@ -21,7 +19,7 @@ From the workspace root:
 cargo build
 ```
 
-Run the Phase 0 TUI:
+Run the TUI:
 
 ```sh
 cargo run -p rust-core

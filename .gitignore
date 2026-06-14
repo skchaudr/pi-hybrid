@@ -1,7 +1,7 @@
 target/
 .cargo-home/
-py-extensions/
 rust-core-temp/
 *.swp
 *.swo
 .DS_Store
+.git_bak/

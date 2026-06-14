@@ -64,7 +64,7 @@ pub fn deepseek_config() -> ProviderConfig {
     ProviderConfig::new(
         "deepseek",
         "https://api.deepseek.com/v1",
-        "DEEPSEEK_API_KEY",
+        "PI_DEEPSEEK_API_KEY",
         "deepseek-chat",
     )
     .with_description("DeepSeek API — code generation and reasoning model")
@@ -75,7 +75,7 @@ pub fn glm_config() -> ProviderConfig {
     ProviderConfig::new(
         "glm",
         "https://open.bigmodel.cn/api/paas/v4",
-        "GLM_API_KEY",
+        "PI_GLM_API_KEY",
         "glm-4-flash",
     )
     .with_description("GLM/Zhipu AI — ChatGLM and CodeGeeX models")
@@ -230,13 +230,13 @@ mod tests {
         let deepseek = registry.get("deepseek").unwrap();
         assert_eq!(deepseek.name, "deepseek");
         assert_eq!(deepseek.api_base, "https://api.deepseek.com/v1");
-        assert_eq!(deepseek.api_key_env, "DEEPSEEK_API_KEY");
+        assert_eq!(deepseek.api_key_env, "PI_DEEPSEEK_API_KEY");
         assert_eq!(deepseek.default_model, "deepseek-chat");
 
         let glm = registry.get("glm").unwrap();
         assert_eq!(glm.name, "glm");
         assert_eq!(glm.api_base, "https://open.bigmodel.cn/api/paas/v4");
-        assert_eq!(glm.api_key_env, "GLM_API_KEY");
+        assert_eq!(glm.api_key_env, "PI_GLM_API_KEY");
         assert_eq!(glm.default_model, "glm-4-flash");
 
         assert_eq!(registry.len(), 2);

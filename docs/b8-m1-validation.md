@@ -15,7 +15,7 @@ cargo clippy --workspace -- -D warnings
 
 - `cargo build --workspace` passed.
 - `cargo test -p rust-core -p ts-bridge` passed.
-  - `rust-core`: 425 tests passed.
+  - `rust-core`: 434 tests passed.
   - `ts-bridge`: 7 tests passed.
 - `cargo fmt --check --all` passed.
 - `cargo clippy --workspace -- -D warnings` passed.
