@@ -756,6 +756,7 @@ mod tests {
 
     #[test]
     fn validate_accepts_provider_with_set_env_var() {
+        let _env = ENV_LOCK.lock().unwrap();
         // Temporarily set an env var.
         unsafe { std::env::set_var("PI_TEST_KEY_TMP", "test-value") };
         let mut cfg = config_with_defaults();
@@ -900,6 +901,7 @@ mod tests {
 
     #[test]
     fn env_override_provider() {
+        let _env = ENV_LOCK.lock().unwrap();
         unsafe { std::env::set_var("PI_PROVIDER", "glm") };
         let mut cfg = config_with_defaults();
         PiConfig::apply_env_overrides(&mut cfg);
@@ -909,7 +911,7 @@ mod tests {
 
     #[test]
     fn env_override_max_turns() {
-        let _guard = ENV_LOCK.lock().unwrap();
+        let _env = ENV_LOCK.lock().unwrap();
         unsafe { std::env::set_var("PI_MAX_TURNS", "42") };
         let mut cfg = config_with_defaults();
         PiConfig::apply_env_overrides(&mut cfg);
@@ -919,7 +921,7 @@ mod tests {
 
     #[test]
     fn env_override_max_turns_invalid_ignored() {
-        let _guard = ENV_LOCK.lock().unwrap();
+        let _env = ENV_LOCK.lock().unwrap();
         unsafe { std::env::set_var("PI_MAX_TURNS", "not-a-number") };
         let mut cfg = config_with_defaults();
         PiConfig::apply_env_overrides(&mut cfg);
@@ -929,6 +931,7 @@ mod tests {
 
     #[test]
     fn env_override_log_level() {
+        let _env = ENV_LOCK.lock().unwrap();
         unsafe { std::env::set_var("PI_LOG_LEVEL", "trace") };
         let mut cfg = config_with_defaults();
         PiConfig::apply_env_overrides(&mut cfg);
@@ -938,6 +941,7 @@ mod tests {
 
     #[test]
     fn env_override_session_db() {
+        let _env = ENV_LOCK.lock().unwrap();
         unsafe { std::env::set_var("PI_SESSION_DB", "/tmp/test-sessions.db") };
         let mut cfg = config_with_defaults();
         PiConfig::apply_env_overrides(&mut cfg);
@@ -947,6 +951,7 @@ mod tests {
 
     #[test]
     fn env_override_deepseek_key() {
+        let _env = ENV_LOCK.lock().unwrap();
         let mut cfg = config_with_defaults();
         unsafe { std::env::set_var("PI_DEEPSEEK_API_KEY", "sk-test-123") };
         PiConfig::apply_env_overrides(&mut cfg);
@@ -957,6 +962,7 @@ mod tests {
 
     #[test]
     fn env_override_glm_key() {
+        let _env = ENV_LOCK.lock().unwrap();
         let mut cfg = config_with_defaults();
         unsafe { std::env::set_var("PI_GLM_API_KEY", "glm-test-456") };
         PiConfig::apply_env_overrides(&mut cfg);
@@ -1002,6 +1008,7 @@ default_model = "glm-4-flash"
 
     #[test]
     fn load_with_missing_file_uses_defaults() {
+        let _env = ENV_LOCK.lock().unwrap();
         unsafe {
             std::env::set_var("PI_DEEPSEEK_API_KEY", "sk-test");
             std::env::set_var("PI_GLM_API_KEY", "glm-test");
@@ -1073,6 +1080,7 @@ default_model = "glm-4-flash"
 
     #[test]
     fn provider_config_api_key_resolved_from_env() {
+        let _env = ENV_LOCK.lock().unwrap();
         unsafe { std::env::set_var("PI_TEST_FROM_ENV", "env-key") };
         let provider = ProviderConfig {
             name: "Test".to_string(),

@@ -4,6 +4,7 @@ This runbook covers the current B7 operator surface: install, build, run,
 configuration, environment overrides, CLI flags, and common failure recovery.
 It describes the code as it exists now. Some agent, provider, bridge, and
 headless paths are scaffolded and are called out where that affects operation.
+For integration and end-to-end checks, read `docs/process-containment.md` first.
 
 ## Quick Start
 
@@ -12,7 +13,7 @@ Prerequisites:
 - Rust toolchain with edition 2024 support.
 - `python3` only if you want to run the external TUI smoke test.
 - Optional provider API keys if using the built-in provider config:
-  `PI_DEEPSEEK_KEY` and `PI_GLM_KEY`.
+  `PI_DEEPSEEK_API_KEY` and `PI_GLM_API_KEY`.
 
 From the workspace root:
 
@@ -234,8 +235,8 @@ Config loader overrides:
 | `PI_SESSION_DB` | `session.db_path` |
 | `PI_MAX_TURNS` | `agent.max_turns` when it parses as an integer |
 | `PI_LOG_LEVEL` | `logging.level` |
-| `PI_DEEPSEEK_KEY` | Built-in config value for `providers.deepseek` |
-| `PI_GLM_KEY` | Built-in config value for `providers.glm` |
+| `PI_DEEPSEEK_API_KEY` | Built-in config value for `providers.deepseek` |
+| `PI_GLM_API_KEY` | Built-in config value for `providers.glm` |
 | `OLLAMA_HOST` | `providers.ollama.api_base` host (default `127.0.0.1:9000`) |
 
 Local Ollama models (placeholder provider `ollama`, no API key):
@@ -265,10 +266,8 @@ Tracing:
 | `RUST_LOG` | Overrides the configured tracing filter through `tracing_subscriber::EnvFilter`. |
 
 Current UI provider registry note: the TUI provider selector uses a separate
-registry whose built-in provider metadata names `DEEPSEEK_API_KEY` and
-`GLM_API_KEY`. Startup validation is governed by `config.rs`, so use
-`PI_DEEPSEEK_KEY` and `PI_GLM_KEY` for the current config path unless you are
-working directly on the scaffolded provider registry.
+registry from startup config, but both built-in provider surfaces now use
+`PI_DEEPSEEK_API_KEY` and `PI_GLM_API_KEY`.
 
 ## CLI Flags
 
@@ -302,15 +301,15 @@ cargo run -p rust-core -- --validate-config 2> /tmp/pi-hybrid.log
 
 ## Troubleshooting
 
-### `provider 'deepseek': api_key_env 'PI_DEEPSEEK_KEY' is not set`
+### `provider 'deepseek': api_key_env 'PI_DEEPSEEK_API_KEY' is not set`
 
 Cause: the built-in default config requires provider API key env vars.
 
 Fix for real provider operation:
 
 ```sh
-export PI_DEEPSEEK_KEY=...
-export PI_GLM_KEY=...
+export PI_DEEPSEEK_API_KEY=...
+export PI_GLM_API_KEY=...
 cargo run -p rust-core -- --validate-config
 ```
 
@@ -419,8 +418,13 @@ Before handing a build to another operator:
 cargo fmt --check
 cargo test --workspace
 cargo run -p rust-core -- --validate-config --config /path/to/test-config.toml
+python3 tests/e2e_headless.py
 python3 tests/tui_smoke.py
 ```
+
+For integration or end-to-end work, follow `docs/process-containment.md`: print
+before/after process snapshots, use temp configs/databases, and enforce hard
+child-process timeouts.
 
 For docs-only runbook updates, verify the required sections exist and smoke-test
 the config example:

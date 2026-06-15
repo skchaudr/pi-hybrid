@@ -6,3 +6,7 @@ graphify-out/
 *.swo
 .DS_Store
 .git_bak/
+.pi/
+
+__pycache__/
+*.pyc

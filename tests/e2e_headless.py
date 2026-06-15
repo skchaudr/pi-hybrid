@@ -1,25 +1,23 @@
 #!/usr/bin/env python3
-"""Contained smoke-test for Rust TUI startup/render through a pseudo-terminal."""
+"""Contained headless JSON-RPC smoke test for rust-core."""
 
 from __future__ import annotations
 
+import json
 import os
-import pty
 import select
 import shutil
 import signal
-import struct
 import subprocess
 import sys
 import tempfile
-import termios
 import time
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
 BIN = ROOT / "target" / "debug" / "rust-core"
-GLOBAL_TIMEOUT = 15.0
+GLOBAL_TIMEOUT = 12.0
 READ_TIMEOUT = 4.0
 STOP_TIMEOUT = 3.0
 
@@ -64,15 +62,14 @@ def process_snapshot(label: str) -> None:
         print("(none)")
 
 
+def run_bounded(args: list[str], deadline: float) -> None:
+    subprocess.run(args, cwd=ROOT, check=True, timeout=remaining(deadline))
+
+
 def build_binary(deadline: float) -> None:
     if BIN.exists():
         return
-    subprocess.run(
-        ["cargo", "build", "-p", "rust-core"],
-        cwd=ROOT,
-        check=True,
-        timeout=remaining(deadline),
-    )
+    run_bounded(["cargo", "build", "-p", "rust-core"], deadline)
 
 
 def write_config(path: Path, db_path: Path) -> None:
@@ -109,28 +106,7 @@ default_model = "glm-4-flash"
     )
 
 
-def read_until(fd: int, needle: str, deadline: float, timeout: float = READ_TIMEOUT) -> str:
-    local_deadline = min(deadline, now() + timeout)
-    output = ""
-    while now() < local_deadline:
-        ready, _, _ = select.select([fd], [], [], min(0.05, remaining(local_deadline)))
-        if not ready:
-            continue
-        chunk = os.read(fd, 4096).decode("utf-8", errors="ignore")
-        output += chunk
-        if needle in output:
-            return output
-    raise AssertionError(f"timed out waiting for {needle!r}\n\nLast output:\n{output[-2000:]}")
-
-
-def set_terminal_size(fd: int, rows: int = 30, columns: int = 100) -> None:
-    import fcntl
-
-    size = struct.pack("HHHH", rows, columns, 0, 0)
-    fcntl.ioctl(fd, termios.TIOCSWINSZ, size)
-
-
-def stop_process(process: subprocess.Popen[bytes]) -> None:
+def stop_process(process: subprocess.Popen[str]) -> None:
     if process.poll() is not None:
         return
     try:
@@ -149,54 +125,93 @@ def stop_process(process: subprocess.Popen[bytes]) -> None:
     process.wait(timeout=STOP_TIMEOUT)
 
 
+def read_json_line(process: subprocess.Popen[str], deadline: float) -> dict:
+    assert process.stdout is not None
+    output_tail: list[str] = []
+    while now() < deadline:
+        if process.poll() is not None:
+            raise AssertionError(
+                f"process exited early with {process.returncode}; tail={output_tail[-8:]}"
+            )
+        ready, _, _ = select.select([process.stdout], [], [], min(0.1, remaining(deadline)))
+        if not ready:
+            continue
+        line = process.stdout.readline()
+        if not line:
+            continue
+        line = line.strip()
+        output_tail.append(line)
+        try:
+            parsed = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if parsed.get("jsonrpc") == "2.0":
+            return parsed
+    raise AssertionError(f"timed out waiting for JSON-RPC line; tail={output_tail[-8:]}")
+
+
+def wait_for(process: subprocess.Popen[str], predicate, timeout: float) -> dict:
+    deadline = now() + timeout
+    while now() < deadline:
+        msg = read_json_line(process, deadline)
+        if predicate(msg):
+            return msg
+    raise AssertionError("timed out waiting for expected JSON-RPC message")
+
+
+def send(process: subprocess.Popen[str], payload: dict) -> None:
+    assert process.stdin is not None
+    process.stdin.write(json.dumps(payload) + "\n")
+    process.stdin.flush()
+
+
 def main() -> int:
     deadline = now() + GLOBAL_TIMEOUT
     process_snapshot("before")
     build_binary(deadline)
 
-    temp_root = Path(tempfile.mkdtemp(prefix="pi-hybrid-tui-smoke-"))
+    temp_root = Path(tempfile.mkdtemp(prefix="pi-hybrid-e2e-headless-"))
     keep_artifacts = os.environ.get("KEEP_ARTIFACTS") == "1"
-    master: int | None = None
-    process: subprocess.Popen[bytes] | None = None
+    process: subprocess.Popen[str] | None = None
     try:
         config_path = temp_root / "config.toml"
         db_path = temp_root / "sessions.db"
         write_config(config_path, db_path)
 
-        master, slave = pty.openpty()
-        set_terminal_size(slave)
-        env = os.environ.copy()
-        env.setdefault("TERM", "xterm-256color")
-
         process = subprocess.Popen(
-            [str(BIN), "--config", str(config_path)],
+            [str(BIN), "--config", str(config_path), "--headless"],
             cwd=ROOT,
-            env=env,
-            stdin=slave,
-            stdout=slave,
-            stderr=slave,
-            close_fds=True,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            start_new_session=True,
         )
-        os.close(slave)
-        print(f"started tui pid={process.pid}")
+        print(f"started headless pid={process.pid}")
 
-        read_until(master, "Pi Hybrid v0.1.0", deadline)
+        ready = wait_for(process, lambda msg: msg.get("method") == "ready", READ_TIMEOUT)
+        assert ready["params"]["mode"] == "headless"
 
-        # This PTY harness validates bounded startup/render and cleanup. On some
-        # macOS non-interactive PTYs, crossterm does not observe synthetic key
-        # input reliably, so shutdown is performed by the containment cleanup.
+        send(process, {"jsonrpc": "2.0", "id": 1, "method": "status", "params": {}})
+        status = wait_for(process, lambda msg: msg.get("id") == 1, READ_TIMEOUT)
+        assert "result" in status or "error" in status
+
+        send(process, {"jsonrpc": "2.0", "id": 2, "method": "shutdown", "params": {}})
+        shutdown = wait_for(process, lambda msg: msg.get("id") == 2, READ_TIMEOUT)
+        assert shutdown.get("result", {}).get("shutdown") is True
+        process.wait(timeout=min(STOP_TIMEOUT, remaining(deadline)))
+        if process.returncode != 0:
+            raise AssertionError(f"headless exited with status {process.returncode}")
     finally:
         if process is not None:
             stop_process(process)
-        if master is not None:
-            os.close(master)
         if keep_artifacts:
             print(f"keeping artifacts: {temp_root}")
         else:
             shutil.rmtree(temp_root, ignore_errors=True)
         process_snapshot("after")
 
-    print("tui smoke passed: render, cleanup")
+    print("headless e2e passed: ready, status, shutdown")
     return 0
 
 
@@ -204,5 +219,5 @@ if __name__ == "__main__":
     try:
         raise SystemExit(main())
     except Exception as exc:
-        print(f"tui smoke failed: {exc}", file=sys.stderr)
+        print(f"headless e2e failed: {exc}", file=sys.stderr)
         raise

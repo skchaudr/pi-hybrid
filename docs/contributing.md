@@ -1,8 +1,9 @@
 # Pi Hybrid Contributor Guide
 
 This guide covers the current B7 contributor path for Pi Hybrid. It should be
-read with `docs/architecture.md` and `docs/operator.md`; those files are the
-source of truth for runtime shape and operator commands.
+read with `docs/architecture.md`, `docs/operator.md`, and
+`docs/process-containment.md`; those files are the source of truth for runtime
+shape, operator commands, and bounded integration-test behavior.
 
 Pi Hybrid is a Rust-first workspace with three active Cargo members:
 
@@ -73,9 +74,10 @@ cargo run -p rust-core -- --validate-config --config /tmp/pi-hybrid/config.toml
 cargo run -p rust-core -- --config /tmp/pi-hybrid/config.toml
 ```
 
-Optional smoke check:
+Optional contained smoke checks:
 
 ```sh
+python3 tests/e2e_headless.py
 python3 tests/tui_smoke.py
 ```
 
@@ -254,10 +256,15 @@ Use the smallest test that proves the behavior.
 - Async session, subagent, or bridge behavior: `#[tokio::test]`.
 - Filesystem behavior: `tempfile` and explicit path assertions.
 - TUI widget state: assert state transitions and rendered text where possible.
+- Headless JSON-RPC behavior: `tests/e2e_headless.py`, which starts one
+  contained `rust-core --headless` child, sends JSON-RPC messages, and cleans up.
 - Full terminal behavior: `tests/tui_smoke.py`, which builds `rust-core` if
   needed and drives a real pseudo-terminal.
 - Config behavior: prefer temporary config files with `api_key_env = "none"`
   unless the test is specifically about missing env vars.
+- Integration/e2e behavior: follow `docs/process-containment.md`; every child
+  process needs a PID log, hard timeout, cleanup path, and before/after process
+  evidence.
 
 Before changing shared behavior, look for nearby tests in the same module and
 extend that style. Avoid broad snapshot tests unless the UI output is otherwise
@@ -273,6 +280,7 @@ Before opening a PR:
       changes.
 - [ ] `cargo test --workspace` passes, or the PR explains the exact failing
       command and why it is unrelated.
+- [ ] `python3 tests/e2e_headless.py` passes for headless/integration changes.
 - [ ] `python3 tests/tui_smoke.py` passes for TUI changes.
 - [ ] `cargo run -p rust-core -- --validate-config --config <test-config>`
       passes for config/provider changes.
