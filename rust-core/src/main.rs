@@ -59,8 +59,54 @@ use crate::tui::mermaid::{MermaidWidget, extract_mermaid_blocks};
 use crate::tui::semantic_diff::SemanticDiff;
 
 #[derive(Debug)]
-struct App {
+struct ViewState {
     active_pane: Pane,
+    toggles: Toggles,
+}
+
+impl ViewState {
+    fn new() -> Self {
+        Self {
+            active_pane: Pane::Editor,
+            toggles: Toggles::default(),
+        }
+    }
+
+    fn cycle_pane(&mut self) {
+        self.active_pane = self.active_pane.next();
+    }
+
+    fn focus_at(&mut self, column: u16, row: u16, layout: &ScreenLayout) {
+        let point = (column, row);
+        if self.toggles.show_file_tree && contains(layout.files, point) {
+            self.active_pane = Pane::Files;
+        } else if contains(layout.editor, point) {
+            self.active_pane = Pane::Editor;
+        } else if self.toggles.show_agent_pane && contains(layout.agents, point) {
+            self.active_pane = Pane::Agents;
+        } else if contains(layout.plan, point) {
+            self.active_pane = Pane::PlanApproval;
+        }
+    }
+
+    fn toggle_file_tree(&mut self) {
+        self.toggles.toggle_file_tree();
+        if self.active_pane == Pane::Files && !self.toggles.show_file_tree {
+            self.active_pane = Pane::Editor;
+        }
+    }
+
+    fn toggle_agent_pane(&mut self) {
+        self.toggles.toggle_agent_pane();
+        if self.active_pane == Pane::Agents && !self.toggles.show_agent_pane {
+            self.active_pane = Pane::Editor;
+        }
+    }
+}
+
+#[derive(Debug)]
+struct App {
+    view_state: ViewState,
     should_quit: bool,
     keybindings: KeyBindings,
     bridge_command: String,
@@ -68,7 +114,6 @@ struct App {
     editor: EditorPane,
     agents: AgentPane,
     plan: PlanPane,
-    toggles: Toggles,
     command_palette: CommandPalette,
     help_popup: HelpPopup,
     plugin_registry: PluginRegistry,
@@ -159,7 +204,7 @@ impl App {
         info!(plugin_count = plugin_registry.len(), "App initialized");
 
         Self {
-            active_pane: Pane::Editor,
+            view_state: ViewState::new(),
             should_quit: false,
             keybindings: KeyBindings::default(),
             bridge_command,
@@ -167,7 +212,6 @@ impl App {
             editor: EditorPane::default(),
             agents: AgentPane::default(),
             plan: PlanPane::default(),
-            toggles: Toggles::default(),
             command_palette: CommandPalette::new(FileTree::load(workspace_root).relative_paths()),
             help_popup: HelpPopup::default(),
             plugin_registry,
@@ -188,31 +232,14 @@ impl App {
         }
     }
 
-    fn cycle_pane(&mut self) {
-        self.active_pane = self.active_pane.next();
-    }
-
     fn quit(&mut self) {
         self.should_quit = true;
-    }
-
-    fn focus_at(&mut self, column: u16, row: u16, layout: &ScreenLayout) {
-        let point = (column, row);
-        if self.toggles.show_file_tree && contains(layout.files, point) {
-            self.active_pane = Pane::Files;
-        } else if contains(layout.editor, point) {
-            self.active_pane = Pane::Editor;
-        } else if self.toggles.show_agent_pane && contains(layout.agents, point) {
-            self.active_pane = Pane::Agents;
-        } else if contains(layout.plan, point) {
-            self.active_pane = Pane::PlanApproval;
-        }
     }
 
     fn handle_action(&mut self, action: Action, layout: &ScreenLayout) {
         match action {
             Action::Quit => self.quit(),
-            Action::CyclePane => self.cycle_pane(),
+            Action::CyclePane => self.view_state.cycle_pane(),
             Action::CommandMode => {}
             Action::OpenCommandPalette => self.command_palette.open(),
             Action::OpenHelp => self.help_popup.open(),
@@ -220,19 +247,9 @@ impl App {
                 self.command_palette.close();
                 self.help_popup.close();
             }
-            Action::ToggleFileTree => {
-                self.toggles.toggle_file_tree();
-                if self.active_pane == Pane::Files && !self.toggles.show_file_tree {
-                    self.active_pane = Pane::Editor;
-                }
-            }
-            Action::ToggleAgentPane => {
-                self.toggles.toggle_agent_pane();
-                if self.active_pane == Pane::Agents && !self.toggles.show_agent_pane {
-                    self.active_pane = Pane::Editor;
-                }
-            }
-            Action::ToggleDarkMode => self.toggles.toggle_dark_mode(),
+            Action::ToggleFileTree => self.view_state.toggle_file_tree(),
+            Action::ToggleAgentPane => self.view_state.toggle_agent_pane(),
+            Action::ToggleDarkMode => self.view_state.toggles.toggle_dark_mode(),
             Action::PaletteConfirm => {
                 if let Some(command) = self.command_palette.selected_command() {
                     self.command_palette.close();
@@ -241,42 +258,42 @@ impl App {
             }
             Action::PaletteBackspace => self.command_palette.backspace(),
             Action::PaletteInput(character) => self.command_palette.push_char(character),
-            Action::MoveDown => match self.active_pane {
+            Action::MoveDown => match self.view_state.active_pane {
                 Pane::Files => self.file_tree.move_down(),
                 Pane::Editor => self.editor.scroll_down(),
                 _ => {}
             },
-            Action::MoveUp => match self.active_pane {
+            Action::MoveUp => match self.view_state.active_pane {
                 Pane::Files => self.file_tree.move_up(),
                 Pane::Editor => self.editor.scroll_up(),
                 _ => {}
             },
-            Action::GoTop => match self.active_pane {
+            Action::GoTop => match self.view_state.active_pane {
                 Pane::Files => self.file_tree.go_top(),
                 Pane::Editor => self.editor.go_top(),
                 _ => {}
             },
-            Action::GoBottom => match self.active_pane {
+            Action::GoBottom => match self.view_state.active_pane {
                 Pane::Files => self.file_tree.go_bottom(),
                 Pane::Editor => self.editor.go_bottom(),
                 _ => {}
             },
-            Action::PageDown => match self.active_pane {
+            Action::PageDown => match self.view_state.active_pane {
                 Pane::Files => self.file_tree.page_down(),
                 Pane::Editor => self.editor.page_down(),
                 _ => {}
             },
-            Action::PageUp => match self.active_pane {
+            Action::PageUp => match self.view_state.active_pane {
                 Pane::Files => self.file_tree.page_up(),
                 Pane::Editor => self.editor.page_up(),
                 _ => {}
             },
             Action::Select => {
-                if self.active_pane == Pane::Files
+                if self.view_state.active_pane == Pane::Files
                     && let Some(path) = self.file_tree.selected_path()
                 {
                     let _ = self.editor.open(&path);
-                    self.active_pane = Pane::Editor;
+                    self.view_state.active_pane = Pane::Editor;
                 }
             }
             Action::RejectPlan => {
@@ -310,8 +327,8 @@ impl App {
                     ));
                 }
             }
-            Action::FocusPane(pane) => self.active_pane = pane,
-            Action::MouseFocus { column, row } => self.focus_at(column, row, layout),
+            Action::FocusPane(pane) => self.view_state.active_pane = pane,
+            Action::MouseFocus { column, row } => self.view_state.focus_at(column, row, layout),
             Action::TogglePlugins => self.toggle_plugins(),
             Action::ToggleGitStatus => {
                 self.git_manager.toggle_status_display();
@@ -355,12 +372,12 @@ impl App {
                     if let Err(err) = self.editor.open(&path) {
                         self.show_error(format!("Open failed: {err}"));
                     } else {
-                        self.active_pane = Pane::Editor;
+                        self.view_state.active_pane = Pane::Editor;
                     }
                 }
             }
-            Command::SwitchPane(pane) => self.active_pane = pane,
-            Command::ToggleDarkMode => self.toggles.toggle_dark_mode(),
+            Command::SwitchPane(pane) => self.view_state.active_pane = pane,
+            Command::ToggleDarkMode => self.view_state.toggles.toggle_dark_mode(),
             Command::ToggleFileTree => {
                 self.handle_action(Action::ToggleFileTree, &ScreenLayout::default())
             }
@@ -727,7 +744,7 @@ fn run(
 
         app.poll_agent_outputs();
         let size = terminal.size()?;
-        let layout = layout_for(Rect::new(0, 0, size.width, size.height), &app.toggles);
+        let layout = layout_for(Rect::new(0, 0, size.width, size.height), &app.view_state.toggles);
         terminal.draw(|frame| draw(frame, &app, layout))?;
 
         if event::poll(Duration::from_millis(200))? {
@@ -736,7 +753,7 @@ fn run(
                     let action = if app.command_palette.is_open() {
                         app.keybindings.handle_palette_key(key)
                     } else {
-                        app.keybindings.handle_key(key, app.active_pane)
+                        app.keybindings.handle_key(key, app.view_state.active_pane)
                     };
                     if let Some(action) = action {
                         if app.command_palette.is_open() {
@@ -849,10 +866,10 @@ fn draw(frame: &mut Frame<'_>, app: &App, layout: ScreenLayout) {
     status_bar::render(
         frame,
         vertical[0],
-        app.active_pane,
+        app.view_state.active_pane,
         app.git_manager.current_branch().as_deref(),
         app.bridge_connected,
-        app.toggles.dark_mode,
+        app.view_state.toggles.dark_mode,
         Some(app.agent_counts),
         app.active_notification(),
         app.git_manager
@@ -860,14 +877,14 @@ fn draw(frame: &mut Frame<'_>, app: &App, layout: ScreenLayout) {
             .then(|| app.git_manager.get_status()),
         app.provider_registry.active_provider_name(),
     );
-    if app.toggles.show_file_tree {
-        app.file_tree.render(frame, layout.files, app.active_pane);
+    if app.view_state.toggles.show_file_tree {
+        app.file_tree.render(frame, layout.files, app.view_state.active_pane);
     }
-    app.editor.render(frame, layout.editor, app.active_pane);
-    if app.toggles.show_agent_pane {
-        app.agents.render(frame, layout.agents, app.active_pane);
+    app.editor.render(frame, layout.editor, app.view_state.active_pane);
+    if app.view_state.toggles.show_agent_pane {
+        app.agents.render(frame, layout.agents, app.view_state.active_pane);
     }
-    app.plan.render(frame, layout.plan, app.active_pane);
+    app.plan.render(frame, layout.plan, app.view_state.active_pane);
     if let Some(message) = app.active_error() {
         status_bar::render_error(
             frame,
@@ -925,21 +942,17 @@ mod tests {
 
     #[test]
     fn tab_cycles_through_all_panes_and_wraps() {
-        let mut app = App::new(
-            PathBuf::from("."),
-            config::PiConfig::default(),
-            CancelToken::new(),
-        );
+        let mut view = ViewState::new();
 
-        assert_eq!(app.active_pane, Pane::Editor);
-        app.cycle_pane();
-        assert_eq!(app.active_pane, Pane::Agents);
-        app.cycle_pane();
-        assert_eq!(app.active_pane, Pane::PlanApproval);
-        app.cycle_pane();
-        assert_eq!(app.active_pane, Pane::Files);
-        app.cycle_pane();
-        assert_eq!(app.active_pane, Pane::Editor);
+        assert_eq!(view.active_pane, Pane::Editor);
+        view.cycle_pane();
+        assert_eq!(view.active_pane, Pane::Agents);
+        view.cycle_pane();
+        assert_eq!(view.active_pane, Pane::PlanApproval);
+        view.cycle_pane();
+        assert_eq!(view.active_pane, Pane::Files);
+        view.cycle_pane();
+        assert_eq!(view.active_pane, Pane::Editor);
     }
 
     #[test]
@@ -952,11 +965,7 @@ mod tests {
 
     #[test]
     fn mouse_coordinates_focus_matching_pane() {
-        let mut app = App::new(
-            PathBuf::from("."),
-            config::PiConfig::default(),
-            CancelToken::new(),
-        );
+        let mut view = ViewState::new();
         let layout = ScreenLayout {
             files: Rect::new(0, 1, 10, 10),
             editor: Rect::new(10, 1, 20, 10),
@@ -964,9 +973,9 @@ mod tests {
             plan: Rect::new(0, 11, 40, 5),
         };
 
-        app.focus_at(35, 5, &layout);
+        view.focus_at(35, 5, &layout);
 
-        assert_eq!(app.active_pane, Pane::Agents);
+        assert_eq!(view.active_pane, Pane::Agents);
     }
 
     #[test]
@@ -1015,16 +1024,16 @@ mod tests {
             CancelToken::new(),
         );
 
-        assert!(app.toggles.show_file_tree);
+        assert!(app.view_state.toggles.show_file_tree);
         app.handle_action(
             Action::ToggleFileTree,
-            &layout_for(Rect::new(0, 0, 100, 40), &app.toggles),
+            &layout_for(Rect::new(0, 0, 100, 40), &app.view_state.toggles),
         );
-        assert!(!app.toggles.show_file_tree);
+        assert!(!app.view_state.toggles.show_file_tree);
 
         app.handle_action(
             Action::OpenCommandPalette,
-            &layout_for(Rect::new(0, 0, 100, 40), &app.toggles),
+            &layout_for(Rect::new(0, 0, 100, 40), &app.view_state.toggles),
         );
         assert!(app.command_palette.is_open());
         app.command_palette.push_str("bridge");
