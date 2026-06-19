@@ -10,13 +10,13 @@
     "semantic_hash": ""
   },
   ".remember/tmp/last-ndc.ts": {
-    "mtime": 1781783333.880778,
-    "ast_hash": "02920fd64db3f0b34000d4c936d81b98",
+    "mtime": 1781829331.377996,
+    "ast_hash": "d5a08f177747e44d6049477f71f6349f",
     "semantic_hash": ""
   },
   ".remember/tmp/last-save.json": {
-    "mtime": 1781783333.6670074,
-    "ast_hash": "a5d30766f8c9ee88d8fb95a2c9188762",
+    "mtime": 1781829877.3860853,
+    "ast_hash": "d2918fce96701f8e27b4943667b3bb0c",
     "semantic_hash": ""
   },
   "py-extensions/src/lib.rs": {
@@ -125,8 +125,8 @@
     "semantic_hash": ""
   },
   "rust-core/src/keybindings.rs": {
-    "mtime": 1781337535.8364677,
-    "ast_hash": "96a6081a4d0d01aa1d2029f659c0d783",
+    "mtime": 1781829905.063225,
+    "ast_hash": "e8d268a6d8e69a1bbbeb9086690cd8ee",
     "semantic_hash": ""
   },
   "rust-core/src/lib.rs": {
@@ -240,8 +240,8 @@
     "semantic_hash": ""
   },
   ".remember/now.md": {
-    "mtime": 1781783343.3605442,
-    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "mtime": 1781829877.335959,
+    "ast_hash": "b654154177228041769e918ad7820f14",
     "semantic_hash": ""
   },
   ".remember/today-2026-06-18.md": {
@@ -452,6 +452,11 @@
   "docs/superpowers/plans/2026-06-19-tui-e2e-collaboration-plan.md": {
     "mtime": 1781828309.9643474,
     "ast_hash": "e8589670e377159d737e0730289280fa",
+    "semantic_hash": ""
+  },
+  ".remember/today-2026-06-19.md": {
+    "mtime": 1781829352.0476608,
+    "ast_hash": "9b59b68bfe8fc0522a8728f4e9714e58",
     "semantic_hash": ""
   }
 }

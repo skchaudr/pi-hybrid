@@ -1,16 +1,16 @@
 # Graph Report - my-pi-hybrid  (2026-06-18)
 
 ## Corpus Check
-- 90 files · ~73,780 words
+- 91 files · ~73,877 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1727 nodes · 3290 edges · 81 communities (72 shown, 9 thin omitted)
+- 1732 nodes · 3294 edges · 83 communities (72 shown, 11 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 8 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `c4f77eb3`
+- Built from commit: `d437c1c5`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -69,6 +69,7 @@
 - [[_COMMUNITY_Community 51|Community 51]]
 - [[_COMMUNITY_Community 52|Community 52]]
 - [[_COMMUNITY_Community 53|Community 53]]
+- [[_COMMUNITY_Community 54|Community 54]]
 - [[_COMMUNITY_Community 60|Community 60]]
 - [[_COMMUNITY_Community 61|Community 61]]
 - [[_COMMUNITY_Community 62|Community 62]]
@@ -90,6 +91,8 @@
 - [[_COMMUNITY_Community 78|Community 78]]
 - [[_COMMUNITY_Community 79|Community 79]]
 - [[_COMMUNITY_Community 80|Community 80]]
+- [[_COMMUNITY_Community 81|Community 81]]
+- [[_COMMUNITY_Community 82|Community 82]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `App` - 44 edges
@@ -128,7 +131,7 @@
 - 1-file cycle: `rust-core/src/shutdown.rs -> rust-core/src/shutdown.rs`
 - 1-file cycle: `rust-core/src/tui/agent_pane.rs -> rust-core/src/tui/agent_pane.rs`
 
-## Communities (81 total, 9 thin omitted)
+## Communities (83 total, 11 thin omitted)
 
 ### Community 0 - "Community 0"
 Cohesion: 0.06
@@ -223,8 +226,8 @@ Cohesion: 0.13
 Nodes (17): Option, Self, String, Style, Vec, compute_with_explicit_language(), detect_syntax_context(), detects_added_and_removed_lines() (+9 more)
 
 ### Community 23 - "Community 23"
-Cohesion: 0.08
-Nodes (37): Agent, agent_config_custom(), agent_config_defaults(), agent_plan_generates_from_messages(), agent_summarize_empty(), agent_with_many_turns(), AgentConfig, AgentOutput (+29 more)
+Cohesion: 0.16
+Nodes (18): Agent, agent_config_custom(), agent_config_defaults(), agent_plan_generates_from_messages(), agent_summarize_empty(), agent_with_many_turns(), AgentConfig, AgentOutput (+10 more)
 
 ### Community 24 - "Community 24"
 Cohesion: 0.08
@@ -251,7 +254,7 @@ Cohesion: 0.24
 Nodes (13): Default, Self, all_toggles_independent(), default_values(), multiple_toggles_in_sequence(), toggle_agent_pane_switches(), toggle_dark_mode_switches(), toggle_file_tree_switches() (+5 more)
 
 ### Community 30 - "Community 30"
-Cohesion: 0.19
+Cohesion: 0.16
 Nodes (8): KeyCode, KeyEvent, MouseEvent, Option, Pane, Action, key(), KeyBindings
 
 ### Community 31 - "Community 31"
@@ -394,10 +397,14 @@ Nodes (3): For --cluster-only, For --update (incremental re-extraction), graphif
 Cohesion: 0.50
 Nodes (3): OPENAI_API_KEY, OPENAI_BASE_URL, graphify-vertex-extract.sh script
 
+### Community 81 - "Community 81"
+Cohesion: 0.14
+Nodes (19): approval_gates_execution(), ExecutionPlan, PlanStatus, PlanStep, execute_tool(), parse_tool_calls(), Tool, ToolCall (+11 more)
+
 ## Knowledge Gaps
-- **379 isolated node(s):** `Default`, `Option`, `PromptMessage`, `ToolCallResponse`, `TokenUsage` (+374 more)
+- **381 isolated node(s):** `Default`, `Option`, `PromptMessage`, `ToolCallResponse`, `TokenUsage` (+376 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **9 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **11 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
@@ -409,7 +416,7 @@ _Questions this graph is uniquely positioned to answer:_
 - **Why does `Sync` connect `Community 2` to `Community 18`, `Community 12`, `Community 5`?**
   _High betweenness centrality (0.012) - this node is a cross-community bridge._
 - **What connects `Default`, `Option`, `PromptMessage` to the rest of the system?**
-  _379 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _381 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
   _Cohesion score 0.05612694681163679 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**
