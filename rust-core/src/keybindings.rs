@@ -114,6 +114,14 @@ impl KeyBindings {
         }
     }
 
+    pub fn handle_overlay_key(&mut self, key: KeyEvent) -> Option<Action> {
+        match key.code {
+            KeyCode::Esc => Some(Action::CloseOverlay),
+            KeyCode::Char('q') if key.modifiers.is_empty() => Some(Action::CloseOverlay),
+            _ => None,
+        }
+    }
+
     pub fn handle_mouse(&self, mouse: MouseEvent) -> Option<Action> {
         match mouse.kind {
             MouseEventKind::Down(_) => Some(Action::MouseFocus {
@@ -208,6 +216,22 @@ mod tests {
             bindings.handle_palette_key(KeyEvent::new(KeyCode::Char('c'), KeyModifiers::CONTROL)),
             None
         );
+    }
+
+    #[test]
+    fn overlay_key_closes_on_q_and_esc_and_swallows_other_global_keys() {
+        let mut bindings = KeyBindings::default();
+
+        assert_eq!(
+            bindings.handle_overlay_key(key(KeyCode::Char('q'))),
+            Some(Action::CloseOverlay)
+        );
+        assert_eq!(
+            bindings.handle_overlay_key(key(KeyCode::Esc)),
+            Some(Action::CloseOverlay)
+        );
+        assert_eq!(bindings.handle_overlay_key(key(KeyCode::Char('j'))), None);
+        assert_eq!(bindings.handle_overlay_key(key(KeyCode::Char('k'))), None);
     }
 
     #[test]

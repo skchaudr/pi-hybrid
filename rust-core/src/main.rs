@@ -189,11 +189,34 @@ impl App {
     }
 
     fn cycle_pane(&mut self) {
-        self.active_pane = self.active_pane.next();
+        loop {
+            self.active_pane = self.active_pane.next();
+            if self.pane_visible(self.active_pane) {
+                break;
+            }
+        }
+    }
+
+    fn pane_visible(&self, pane: Pane) -> bool {
+        match pane {
+            Pane::Files => self.toggles.show_file_tree,
+            Pane::Agents => self.toggles.show_agent_pane,
+            Pane::Editor | Pane::PlanApproval => true,
+        }
     }
 
     fn quit(&mut self) {
         self.should_quit = true;
+    }
+
+    fn resolve_key_action(&mut self, key: crossterm::event::KeyEvent) -> Option<Action> {
+        if self.command_palette.is_open() {
+            self.keybindings.handle_palette_key(key)
+        } else if self.help_popup.is_open() {
+            self.keybindings.handle_overlay_key(key)
+        } else {
+            self.keybindings.handle_key(key, self.active_pane)
+        }
     }
 
     fn focus_at(&mut self, column: u16, row: u16, layout: &ScreenLayout) {
@@ -733,11 +756,7 @@ fn run(
         if event::poll(Duration::from_millis(200))? {
             match event::read()? {
                 Event::Key(key) if key.kind == KeyEventKind::Press => {
-                    let action = if app.command_palette.is_open() {
-                        app.keybindings.handle_palette_key(key)
-                    } else {
-                        app.keybindings.handle_key(key, app.active_pane)
-                    };
+                    let action = app.resolve_key_action(key);
                     if let Some(action) = action {
                         if app.command_palette.is_open() {
                             app.handle_palette_action(action);
@@ -954,6 +973,54 @@ mod tests {
         assert_eq!(app.active_pane, Pane::PlanApproval);
         app.cycle_pane();
         assert_eq!(app.active_pane, Pane::Files);
+        app.cycle_pane();
+        assert_eq!(app.active_pane, Pane::Editor);
+    }
+
+    #[test]
+    fn help_overlay_swallows_global_shortcuts_and_closes_on_q() {
+        use crossterm::event::{KeyCode, KeyEvent, KeyModifiers};
+
+        let mut app = App::new(
+            PathBuf::from("."),
+            config::PiConfig::default(),
+            CancelToken::new(),
+        );
+        let key = |code| KeyEvent::new(code, KeyModifiers::empty());
+
+        app.help_popup.open();
+
+        // 'j'/'k' must not scroll the background pane while help is open.
+        assert_eq!(app.resolve_key_action(key(KeyCode::Char('j'))), None);
+        assert_eq!(app.resolve_key_action(key(KeyCode::Char('k'))), None);
+
+        // 'q' closes the overlay instead of quitting the app.
+        assert_eq!(
+            app.resolve_key_action(key(KeyCode::Char('q'))),
+            Some(Action::CloseOverlay)
+        );
+        app.handle_action(
+            Action::CloseOverlay,
+            &layout_for(Rect::new(0, 0, 80, 24), &app.toggles),
+        );
+        assert!(!app.help_popup.is_open());
+        assert!(!app.should_quit);
+    }
+
+    #[test]
+    fn tab_cycle_skips_hidden_panes() {
+        let mut app = App::new(
+            PathBuf::from("."),
+            config::PiConfig::default(),
+            CancelToken::new(),
+        );
+        let layout = layout_for(Rect::new(0, 0, 120, 40), &app.toggles);
+        app.handle_action(Action::ToggleFileTree, &layout);
+        app.handle_action(Action::ToggleAgentPane, &layout);
+
+        assert_eq!(app.active_pane, Pane::Editor);
+        app.cycle_pane();
+        assert_eq!(app.active_pane, Pane::PlanApproval);
         app.cycle_pane();
         assert_eq!(app.active_pane, Pane::Editor);
     }
