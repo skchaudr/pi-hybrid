@@ -32,3 +32,9 @@ and Plan/Approval panes. Press `tab` to cycle the active pane and `q` to quit.
 
 See [benchmarks.md](benchmarks.md) for the Criterion benchmark harness,
 baseline template, and CI regression gate notes.
+
+## Graphify (codebase map for agents)
+
+- Pre-built graph: `graphify-out/graph.json`, `graphify-out/GRAPH_REPORT.md`
+- AST-only refresh: `graphify update .` (no API cost)
+- Semantic extraction via Vertex + ADC: [graphify-vertex-adc.md](graphify-vertex-adc.md)
