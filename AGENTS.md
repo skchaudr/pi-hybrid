@@ -11,3 +11,18 @@ Rules:
 - Read graphify-out/GRAPH_REPORT.md only for broad architecture review or when query/path/explain do not surface enough context.
 - After modifying code, run `graphify update .` to keep the graph current (AST-only, no API cost).
 - For semantic doc extraction via GCP/Vertex ADC (no AI Studio API key), see `docs/graphify-vertex-adc.md` and run `./scripts/graphify-vertex-extract.sh`.
+
+## Build & verify (rust-core)
+
+This repo's main crate is `rust-core/` (Cargo workspace member, Rust 2024 edition). Standard verification loop:
+
+```
+cargo build -p rust-core
+cargo test -p rust-core
+cargo clippy -p rust-core -- -D warnings
+cargo fmt --check
+```
+
+Optional integration smoke tests (Python 3, no extra deps): `python3 tests/e2e_headless.py` (JSON-RPC over stdin/stdout via `--headless`, no terminal needed) and `python3 tests/tui_smoke.py` (PTY launch/teardown only — synthetic keystroke injection into the PTY is unreliable on macOS, so it does not send real keys).
+
+Use `cargo test -p rust-core` as the source of truth for behavior; the TUI's `agent::spawn_agent` path is the real agent execution path. `headless.rs`'s `"run"` JSON-RPC method is currently a simulated stub (does not call `agent::spawn_agent`) — don't assume headless mode proves real agent behavior.
