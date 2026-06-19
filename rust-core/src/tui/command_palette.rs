@@ -153,7 +153,7 @@ impl CommandPalette {
         let chunks = Layout::default()
             .direction(Direction::Vertical)
             .constraints([Constraint::Length(3), Constraint::Min(4)])
-            .split(popup);
+            .split(block.inner(popup));
         frame.render_widget(block, popup);
         frame.render_widget(
             Paragraph::new(Line::from(vec![
@@ -301,6 +301,7 @@ fn inner(area: Rect) -> Rect {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use ratatui::{Terminal, backend::TestBackend};
 
     #[test]
     fn fuzzy_matching_allows_sparse_queries() {
@@ -455,6 +456,38 @@ mod tests {
         let visible = palette.visible_commands();
         // Should only match "Quit" (maybe "Quick" if present)
         assert!(visible.iter().any(|c| c.name == "Quit"));
+    }
+
+    #[test]
+    fn palette_input_row_does_not_overlap_title_row() {
+        let mut palette = CommandPalette::new(vec![]);
+        palette.open();
+        palette.push_str("ppppp");
+
+        let backend = TestBackend::new(120, 40);
+        let mut terminal = Terminal::new(backend).expect("terminal");
+        let area = Rect::new(0, 0, 120, 40);
+        terminal
+            .draw(|frame| palette.render(frame, area))
+            .expect("draw");
+        let buffer = terminal.backend().buffer();
+
+        let rows: Vec<String> = (0..buffer.area().height)
+            .map(|y| {
+                (0..buffer.area().width)
+                    .map(|x| buffer[(x, y)].symbol())
+                    .collect::<String>()
+            })
+            .collect();
+
+        let title_row = rows
+            .iter()
+            .find(|row| row.contains("Command Palette"))
+            .expect("title row should contain the intact title");
+        assert!(
+            !title_row.contains("ppppp"),
+            "query text overwrote the title row:\n{title_row}"
+        );
     }
 
     #[test]
