@@ -1,0 +1,317 @@
+{
+  ".pi/auto-mode.json": {
+    "mtime": 1781832696.5533903,
+    "ast_hash": "5479401c7b18c0946f86cc6726fadd51",
+    "semantic_hash": ""
+  },
+  "py-extensions/src/lib.rs": {
+    "mtime": 1781832696.5613904,
+    "ast_hash": "3121fbb0f903d343fd1df80d7749340c",
+    "semantic_hash": ""
+  },
+  "rust-core/benches/bench_main.rs": {
+    "mtime": 1781832696.5613904,
+    "ast_hash": "023af197ace054517f29729ca7720e20",
+    "semantic_hash": ""
+  },
+  "rust-core/src/agent/agent_core.rs": {
+    "mtime": 1781832696.5613904,
+    "ast_hash": "1610590d1952bc634e12ff31c08c6aba",
+    "semantic_hash": ""
+  },
+  "rust-core/src/agent/bridge_client.rs": {
+    "mtime": 1781832696.5613904,
+    "ast_hash": "ba9d5899fe305b455a3a4c3f450d6692",
+    "semantic_hash": ""
+  },
+  "rust-core/src/agent/compaction.rs": {
+    "mtime": 1781832696.5613904,
+    "ast_hash": "41d3354c2255dc2cbd83fc241337706c",
+    "semantic_hash": ""
+  },
+  "rust-core/src/agent/git.rs": {
+    "mtime": 1781832696.5653903,
+    "ast_hash": "226ae9487f7b8c71263a9f16d95dc4cf",
+    "semantic_hash": ""
+  },
+  "rust-core/src/agent/loop.rs": {
+    "mtime": 1781832696.5653903,
+    "ast_hash": "3014009f58bd1c9f1d0be4adf47bfef7",
+    "semantic_hash": ""
+  },
+  "rust-core/src/agent/message.rs": {
+    "mtime": 1781832696.5653903,
+    "ast_hash": "96ad5eec64d216706306bcce61882f19",
+    "semantic_hash": ""
+  },
+  "rust-core/src/agent/mod.rs": {
+    "mtime": 1781832696.5653903,
+    "ast_hash": "883d6af69a5105d1806bb1028851dd6c",
+    "semantic_hash": ""
+  },
+  "rust-core/src/agent/plan.rs": {
+    "mtime": 1781832696.5653903,
+    "ast_hash": "3388a74b7c63b87d0bd02ac33a3b3ccd",
+    "semantic_hash": ""
+  },
+  "rust-core/src/agent/plan_exec.rs": {
+    "mtime": 1781832696.5653903,
+    "ast_hash": "e118d04f12d6e3be6eb04406d3b1805c",
+    "semantic_hash": ""
+  },
+  "rust-core/src/agent/plugins.rs": {
+    "mtime": 1781832696.5653903,
+    "ast_hash": "74c4f248683eb0c344e1458e91fa0eef",
+    "semantic_hash": ""
+  },
+  "rust-core/src/agent/providers.rs": {
+    "mtime": 1781832696.5653903,
+    "ast_hash": "813221b874668b39d231419f61a0fbd1",
+    "semantic_hash": ""
+  },
+  "rust-core/src/agent/session.rs": {
+    "mtime": 1781832696.5653903,
+    "ast_hash": "10b501a949e9193319f167f14894deea",
+    "semantic_hash": ""
+  },
+  "rust-core/src/agent/subagent.rs": {
+    "mtime": 1781832696.5653903,
+    "ast_hash": "4640b78e18d8bed7a481f769a80bb248",
+    "semantic_hash": ""
+  },
+  "rust-core/src/agent/subagents.rs": {
+    "mtime": 1781832696.5653903,
+    "ast_hash": "711c6e812e64643c09e23eb84a6cfb49",
+    "semantic_hash": ""
+  },
+  "rust-core/src/agent/tool.rs": {
+    "mtime": 1781832696.5653903,
+    "ast_hash": "921ebec49e31f977bd87cdc35e0d1919",
+    "semantic_hash": ""
+  },
+  "rust-core/src/bridge/json_rpc.rs": {
+    "mtime": 1781832696.5653903,
+    "ast_hash": "0d91c738d74c03e0f7329668bb81e96b",
+    "semantic_hash": ""
+  },
+  "rust-core/src/bridge/mod.rs": {
+    "mtime": 1781832696.5653903,
+    "ast_hash": "a66e82a9349bf988e05bb192db2f3a22",
+    "semantic_hash": ""
+  },
+  "rust-core/src/config.rs": {
+    "mtime": 1781832696.5693903,
+    "ast_hash": "266927fd1b07ff8ac44dec5047b9cf36",
+    "semantic_hash": ""
+  },
+  "rust-core/src/headless.rs": {
+    "mtime": 1781832696.5693903,
+    "ast_hash": "8a2ea059c8df94ff6b0d6ad7e0a80617",
+    "semantic_hash": ""
+  },
+  "rust-core/src/keybindings.rs": {
+    "mtime": 1781832696.5693903,
+    "ast_hash": "96a6081a4d0d01aa1d2029f659c0d783",
+    "semantic_hash": ""
+  },
+  "rust-core/src/lib.rs": {
+    "mtime": 1781832696.5693903,
+    "ast_hash": "d759fe09211de6146d7f5d7848901b9c",
+    "semantic_hash": ""
+  },
+  "rust-core/src/main.rs": {
+    "mtime": 1781832696.5693903,
+    "ast_hash": "9da17552b083dbb7e62b894dd70b777f",
+    "semantic_hash": ""
+  },
+  "rust-core/src/session/mod.rs": {
+    "mtime": 1781832696.5693903,
+    "ast_hash": "796478b0b99cebc992db45e0c8d0ae53",
+    "semantic_hash": ""
+  },
+  "rust-core/src/session/store.rs": {
+    "mtime": 1781832696.5693903,
+    "ast_hash": "c19d26f7d5097c942373cb2677c6d94d",
+    "semantic_hash": ""
+  },
+  "rust-core/src/shutdown.rs": {
+    "mtime": 1781832696.5693903,
+    "ast_hash": "98dd7e2baf0ca2d0b1d8aea15fc2c2bc",
+    "semantic_hash": ""
+  },
+  "rust-core/src/tools/mod.rs": {
+    "mtime": 1781832696.5693903,
+    "ast_hash": "68b329da9893e34099c7d8ad5cb9c940",
+    "semantic_hash": ""
+  },
+  "rust-core/src/tui/agent_pane.rs": {
+    "mtime": 1781832696.5693903,
+    "ast_hash": "48d8186fa6617fcb6b14b92c500b0443",
+    "semantic_hash": ""
+  },
+  "rust-core/src/tui/command_palette.rs": {
+    "mtime": 1781832696.5693903,
+    "ast_hash": "4f752931200bac1067663b59f66b8c45",
+    "semantic_hash": ""
+  },
+  "rust-core/src/tui/editor_pane.rs": {
+    "mtime": 1781832696.5693903,
+    "ast_hash": "25e5cf958e7de6146024c7748991cc93",
+    "semantic_hash": ""
+  },
+  "rust-core/src/tui/file_tree.rs": {
+    "mtime": 1781832696.5693903,
+    "ast_hash": "b2965eff855109f8486bd5b2580b2310",
+    "semantic_hash": ""
+  },
+  "rust-core/src/tui/help_popup.rs": {
+    "mtime": 1781832696.5733902,
+    "ast_hash": "149260ed1986866a3e85de32d26174f8",
+    "semantic_hash": ""
+  },
+  "rust-core/src/tui/mermaid.rs": {
+    "mtime": 1781832696.5733902,
+    "ast_hash": "013509dc42e04fd38752d5eac26d5109",
+    "semantic_hash": ""
+  },
+  "rust-core/src/tui/mod.rs": {
+    "mtime": 1781832696.5733902,
+    "ast_hash": "84ed4b603ae65671db12f97b94df00ad",
+    "semantic_hash": ""
+  },
+  "rust-core/src/tui/plan_pane.rs": {
+    "mtime": 1781832696.5733902,
+    "ast_hash": "43c088b2dc54f44232b578ea5f4f59c5",
+    "semantic_hash": ""
+  },
+  "rust-core/src/tui/semantic_diff.rs": {
+    "mtime": 1781832696.5733902,
+    "ast_hash": "91af94d36d27bbc00fa4963a38ddf2a4",
+    "semantic_hash": ""
+  },
+  "rust-core/src/tui/status_bar.rs": {
+    "mtime": 1781832696.5733902,
+    "ast_hash": "2fd7a84f10c1c714dd09a39763530056",
+    "semantic_hash": ""
+  },
+  "rust-core/src/tui/toggles.rs": {
+    "mtime": 1781832696.5733902,
+    "ast_hash": "c51ce9b71f62b899e4363a329e064b3b",
+    "semantic_hash": ""
+  },
+  "tests/e2e_headless.py": {
+    "mtime": 1781832696.5733902,
+    "ast_hash": "960d94ab4a471268e6aa1e425900b50f",
+    "semantic_hash": ""
+  },
+  "tests/tui_smoke.py": {
+    "mtime": 1781832696.5733902,
+    "ast_hash": "f54c8dd15d638c186a1bc9603358d24a",
+    "semantic_hash": ""
+  },
+  "ts-bridge/src/lib.rs": {
+    "mtime": 1781832696.5733902,
+    "ast_hash": "89a209a5af580fc7ee4e86d3e71a96c0",
+    "semantic_hash": ""
+  },
+  "ts-bridge/src/rpc.rs": {
+    "mtime": 1781832696.5773904,
+    "ast_hash": "0d79b32604cd78207b4336640ae12985",
+    "semantic_hash": ""
+  },
+  ".github/workflows/ci.yml": {
+    "mtime": 1781832696.5533903,
+    "ast_hash": "f4def1c3da5cc4260471bfdb83df97e0",
+    "semantic_hash": ""
+  },
+  "MISSION.md": {
+    "mtime": 1781832696.5573902,
+    "ast_hash": "865c41c524312144b9dac94a4cc07b48",
+    "semantic_hash": ""
+  },
+  "MISSION_PHASE1.md": {
+    "mtime": 1781832696.5573902,
+    "ast_hash": "f08346887363b3c36c86300ddba6b87b",
+    "semantic_hash": ""
+  },
+  "MISSION_PHASE1B.md": {
+    "mtime": 1781832696.5573902,
+    "ast_hash": "58834450618332d795d397333763c919",
+    "semantic_hash": ""
+  },
+  "MISSION_PHASE2.md": {
+    "mtime": 1781832696.5573902,
+    "ast_hash": "baffe7149cdbcd684a8f25aa9fa8ded1",
+    "semantic_hash": ""
+  },
+  "PHASE5_REPORT.md": {
+    "mtime": 1781832696.5573902,
+    "ast_hash": "3904828e9fd59015786c24c8c6330d8b",
+    "semantic_hash": ""
+  },
+  "docs/README.md": {
+    "mtime": 1781832696.5573902,
+    "ast_hash": "38917e08623e7e494279d1495f6a4a64",
+    "semantic_hash": ""
+  },
+  "docs/api.md": {
+    "mtime": 1781832696.5573902,
+    "ast_hash": "1700e8d27f21974cc05604914332beba",
+    "semantic_hash": ""
+  },
+  "docs/architecture.md": {
+    "mtime": 1781832696.5573902,
+    "ast_hash": "7d3f1cc9b69628dc064f52d0fc7c85ad",
+    "semantic_hash": ""
+  },
+  "docs/b8-m1-validation.md": {
+    "mtime": 1781832696.5573902,
+    "ast_hash": "312ebb1b388d5f73b5b4ee5ce78353c0",
+    "semantic_hash": ""
+  },
+  "docs/benchmarks.md": {
+    "mtime": 1781832696.5573902,
+    "ast_hash": "56821c88d220626b69711091f1b9ca65",
+    "semantic_hash": ""
+  },
+  "docs/clone-to-run.md": {
+    "mtime": 1781832696.5573902,
+    "ast_hash": "723f7e34205dec00f2f615e4443f3a06",
+    "semantic_hash": ""
+  },
+  "docs/contributing.md": {
+    "mtime": 1781832696.5573902,
+    "ast_hash": "d70b879f4fc6d828fd03b4daa673ffb2",
+    "semantic_hash": ""
+  },
+  "docs/feature-flags.md": {
+    "mtime": 1781832696.5573902,
+    "ast_hash": "0fe03cfff2c2c0d0c589df09135bc684",
+    "semantic_hash": ""
+  },
+  "docs/graceful-degradation.md": {
+    "mtime": 1781832696.5573902,
+    "ast_hash": "a5267e7a143b0027868267d779eda0fd",
+    "semantic_hash": ""
+  },
+  "docs/operator.md": {
+    "mtime": 1781832696.5573902,
+    "ast_hash": "506d77c0c83ad8a6babac0eab62adda8",
+    "semantic_hash": ""
+  },
+  "docs/process-containment.md": {
+    "mtime": 1781832696.5613904,
+    "ast_hash": "f1045c9ce58eb055dca8bc40a151e06c",
+    "semantic_hash": ""
+  },
+  "docs/roadmap-b7-b10.md": {
+    "mtime": 1781832696.5613904,
+    "ast_hash": "1166c567b75a1032569e1e8e3bc71885",
+    "semantic_hash": ""
+  },
+  "docs/terminal-matrix.md": {
+    "mtime": 1781832696.5613904,
+    "ast_hash": "dd259d8b83c9311b0583923b916fd33c",
+    "semantic_hash": ""
+  }
+}
