@@ -1,15 +1,16 @@
-# Graph Report - .  (2026-06-18)
+# Graph Report - my-pi-hybrid  (2026-06-18)
 
 ## Corpus Check
-- cluster-only mode — file stats not available
+- 90 files · ~73,780 words
+- Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1577 nodes · 3153 edges · 60 communities (58 shown, 2 thin omitted)
+- 1727 nodes · 3290 edges · 81 communities (72 shown, 9 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 8 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `4db34af1`
+- Built from commit: `c4f77eb3`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -68,9 +69,30 @@
 - [[_COMMUNITY_Community 51|Community 51]]
 - [[_COMMUNITY_Community 52|Community 52]]
 - [[_COMMUNITY_Community 53|Community 53]]
+- [[_COMMUNITY_Community 60|Community 60]]
+- [[_COMMUNITY_Community 61|Community 61]]
+- [[_COMMUNITY_Community 62|Community 62]]
+- [[_COMMUNITY_Community 63|Community 63]]
+- [[_COMMUNITY_Community 64|Community 64]]
+- [[_COMMUNITY_Community 65|Community 65]]
+- [[_COMMUNITY_Community 66|Community 66]]
+- [[_COMMUNITY_Community 67|Community 67]]
+- [[_COMMUNITY_Community 68|Community 68]]
+- [[_COMMUNITY_Community 69|Community 69]]
+- [[_COMMUNITY_Community 70|Community 70]]
+- [[_COMMUNITY_Community 71|Community 71]]
+- [[_COMMUNITY_Community 72|Community 72]]
+- [[_COMMUNITY_Community 73|Community 73]]
+- [[_COMMUNITY_Community 74|Community 74]]
+- [[_COMMUNITY_Community 75|Community 75]]
+- [[_COMMUNITY_Community 76|Community 76]]
+- [[_COMMUNITY_Community 77|Community 77]]
+- [[_COMMUNITY_Community 78|Community 78]]
+- [[_COMMUNITY_Community 79|Community 79]]
+- [[_COMMUNITY_Community 80|Community 80]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `App` - 43 edges
+1. `App` - 44 edges
 2. `config_with_defaults()` - 31 edges
 3. `render_to_string()` - 28 edges
 4. `PluginRegistry` - 26 edges
@@ -106,11 +128,11 @@
 - 1-file cycle: `rust-core/src/shutdown.rs -> rust-core/src/shutdown.rs`
 - 1-file cycle: `rust-core/src/tui/agent_pane.rs -> rust-core/src/tui/agent_pane.rs`
 
-## Communities (60 total, 2 thin omitted)
+## Communities (81 total, 9 thin omitted)
 
 ### Community 0 - "Community 0"
 Cohesion: 0.06
-Nodes (60): Action, AgentInput, AgentPane, bench_config_load_parse(), bench_sqlite_session_save_load(), bench_tui_frame_render(), Command, CommandPalette (+52 more)
+Nodes (62): Action, AgentInput, AgentPane, bench_config_load_parse(), bench_sqlite_session_save_load(), bench_tui_frame_render(), Command, CommandPalette (+54 more)
 
 ### Community 1 - "Community 1"
 Cohesion: 0.06
@@ -201,12 +223,12 @@ Cohesion: 0.13
 Nodes (17): Option, Self, String, Style, Vec, compute_with_explicit_language(), detect_syntax_context(), detects_added_and_removed_lines() (+9 more)
 
 ### Community 23 - "Community 23"
-Cohesion: 0.16
-Nodes (18): Agent, agent_config_custom(), agent_config_defaults(), agent_plan_generates_from_messages(), agent_summarize_empty(), agent_with_many_turns(), AgentConfig, AgentOutput (+10 more)
+Cohesion: 0.08
+Nodes (37): Agent, agent_config_custom(), agent_config_defaults(), agent_plan_generates_from_messages(), agent_summarize_empty(), agent_with_many_turns(), AgentConfig, AgentOutput (+29 more)
 
 ### Community 24 - "Community 24"
-Cohesion: 0.14
-Nodes (19): approval_gates_execution(), ExecutionPlan, PlanStatus, PlanStep, execute_tool(), parse_tool_calls(), Tool, ToolCall (+11 more)
+Cohesion: 0.08
+Nodes (23): For /graphify add and --watch, For /graphify query, For the commit hook and native CLAUDE.md integration, For --update and --cluster-only, /graphify, Honesty Rules, Interpreter guard for subcommands, Part A - Structural extraction for code files (+15 more)
 
 ### Community 25 - "Community 25"
 Cohesion: 0.14
@@ -313,27 +335,83 @@ Cohesion: 0.40
 Nodes (4): B8 M1 Mac Mini Validation, Commands run, Results, Scope note
 
 ### Community 51 - "Community 51"
-Cohesion: 0.40
-Nodes (4): Build, Performance, Pi Rust-Core Hybrid Workspace, Workspace Layout
+Cohesion: 0.33
+Nodes (5): Build, Graphify (codebase map for agents), Performance, Pi Rust-Core Hybrid Workspace, Workspace Layout
+
+### Community 60 - "Community 60"
+Cohesion: 0.08
+Nodes (23): For /graphify add and --watch, For /graphify query, For the commit hook and native CLAUDE.md integration, For --update and --cluster-only, /graphify, Honesty Rules, Interpreter guard for subcommands, Part A - Structural extraction for code files (+15 more)
+
+### Community 61 - "Community 61"
+Cohesion: 0.14
+Nodes (13): Communication Protocol, Current Baseline, Execution Choice, Final Gate, Global Constraints, Task 1: Lock The Test Target, Task 2: Harden Existing Smoke Scripts For Restricted Runners, Task 3: Add A Scripted TUI Interaction Harness (+5 more)
+
+### Community 62 - "Community 62"
+Cohesion: 0.22
+Nodes (8): graphify reference: extra exports and benchmark, Step 6b - Wiki (only if --wiki flag), Step 7 - Neo4j export (only if --neo4j or --neo4j-push flag), Step 7a - FalkorDB export (only if --falkordb or --falkordb-push flag), Step 7b - SVG export (only if --svg flag), Step 7c - GraphML export (only if --graphml flag), Step 7d - MCP server (only if --mcp flag), Step 8 - Token reduction benchmark (only if total_words > 5000)
+
+### Community 63 - "Community 63"
+Cohesion: 0.22
+Nodes (8): Agent handoff (save tokens), CI / keyless (Workload Identity Federation), Graphify semantic extraction via Vertex AI + ADC, One-time setup (local), Prerequisites, Run semantic extraction (this repo), Troubleshooting, What the script does
+
+### Community 64 - "Community 64"
+Cohesion: 0.22
+Nodes (8): graphify reference: extra exports and benchmark, Step 6b - Wiki (only if --wiki flag), Step 7 - Neo4j export (only if --neo4j or --neo4j-push flag), Step 7a - FalkorDB export (only if --falkordb or --falkordb-push flag), Step 7b - SVG export (only if --svg flag), Step 7c - GraphML export (only if --graphml flag), Step 7d - MCP server (only if --mcp flag), Step 8 - Token reduction benchmark (only if total_words > 5000)
+
+### Community 65 - "Community 65"
+Cohesion: 0.33
+Nodes (5): For /graphify explain, For /graphify path, graphify reference: query, path, explain, Step 0 — Constrained query expansion (REQUIRED before traversal), Step 1 — Traversal
+
+### Community 66 - "Community 66"
+Cohesion: 0.33
+Nodes (5): For /graphify explain, For /graphify path, graphify reference: query, path, explain, Step 0 — Constrained query expansion (REQUIRED before traversal), Step 1 — Traversal
+
+### Community 67 - "Community 67"
+Cohesion: 0.50
+Nodes (3): For /graphify add, For --watch, graphify reference: add a URL and watch a folder
+
+### Community 68 - "Community 68"
+Cohesion: 0.50
+Nodes (3): For git commit hook, For native CLAUDE.md integration, graphify reference: commit hook and native CLAUDE.md integration
+
+### Community 69 - "Community 69"
+Cohesion: 0.50
+Nodes (3): For --cluster-only, For --update (incremental re-extraction), graphify reference: incremental update and cluster-only
+
+### Community 70 - "Community 70"
+Cohesion: 0.50
+Nodes (3): For /graphify add, For --watch, graphify reference: add a URL and watch a folder
+
+### Community 71 - "Community 71"
+Cohesion: 0.50
+Nodes (3): For git commit hook, For native CLAUDE.md integration, graphify reference: commit hook and native CLAUDE.md integration
+
+### Community 72 - "Community 72"
+Cohesion: 0.50
+Nodes (3): For --cluster-only, For --update (incremental re-extraction), graphify reference: incremental update and cluster-only
+
+### Community 73 - "Community 73"
+Cohesion: 0.50
+Nodes (3): OPENAI_API_KEY, OPENAI_BASE_URL, graphify-vertex-extract.sh script
 
 ## Knowledge Gaps
-- **277 isolated node(s):** `Default`, `Option`, `PromptMessage`, `ToolCallResponse`, `TokenUsage` (+272 more)
+- **379 isolated node(s):** `Default`, `Option`, `PromptMessage`, `ToolCallResponse`, `TokenUsage` (+374 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **2 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **9 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `active_border_style()` connect `Community 9` to `Community 11`, `Community 4`, `Community 7`?**
-  _High betweenness centrality (0.023) - this node is a cross-community bridge._
+  _High betweenness centrality (0.019) - this node is a cross-community bridge._
 - **Why does `SemanticDiff` connect `Community 7` to `Community 0`?**
-  _High betweenness centrality (0.018) - this node is a cross-community bridge._
-- **Why does `Sync` connect `Community 2` to `Community 18`, `Community 12`, `Community 5`?**
   _High betweenness centrality (0.014) - this node is a cross-community bridge._
+- **Why does `Sync` connect `Community 2` to `Community 18`, `Community 12`, `Community 5`?**
+  _High betweenness centrality (0.012) - this node is a cross-community bridge._
 - **What connects `Default`, `Option`, `PromptMessage` to the rest of the system?**
-  _277 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _379 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
-  _Cohesion score 0.05555555555555555 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.05612694681163679 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**
   _Cohesion score 0.05744888023369036 - nodes in this community are weakly interconnected._
 - **Should `Community 2` be split into smaller, more focused modules?**

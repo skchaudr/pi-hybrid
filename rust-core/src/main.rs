@@ -922,6 +922,22 @@ fn current_git_branch() -> Option<String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use ratatui::backend::TestBackend;
+
+    fn render_app_to_string(app: &App, width: u16, height: u16) -> String {
+        let backend = TestBackend::new(width, height);
+        let mut terminal = Terminal::new(backend).expect("terminal creation");
+        terminal
+            .draw(|frame| {
+                let layout = layout_for(frame.area(), &app.toggles);
+                draw(frame, app, layout);
+            })
+            .expect("draw");
+        let buffer = terminal.backend().buffer();
+        (0..buffer.area().height)
+            .flat_map(|y| (0..buffer.area().width).map(move |x| buffer[(x, y)].symbol()))
+            .collect()
+    }
 
     #[test]
     fn tab_cycles_through_all_panes_and_wraps() {
@@ -1032,5 +1048,42 @@ mod tests {
             app.command_palette.visible_commands()[0].name,
             "Run Bridge Test"
         );
+    }
+
+    #[test]
+    fn overlay_actions_render_and_close_without_terminal_input() {
+        let mut app = App::new(
+            PathBuf::from("."),
+            config::PiConfig::default(),
+            CancelToken::new(),
+        );
+        let layout = layout_for(Rect::new(0, 0, 120, 40), &app.toggles);
+
+        let initial = render_app_to_string(&app, 120, 40);
+        assert!(initial.contains("Pi Hybrid v0.1.0"));
+
+        app.handle_action(Action::OpenCommandPalette, &layout);
+        let palette = render_app_to_string(&app, 120, 40);
+        assert!(
+            palette.contains("Run Bridge Test"),
+            "palette render did not include command:\n{palette}"
+        );
+
+        app.handle_action(Action::CloseOverlay, &layout);
+        let closed_palette = render_app_to_string(&app, 120, 40);
+        assert!(!closed_palette.contains("Run Bridge Test"));
+
+        app.handle_action(Action::OpenHelp, &layout);
+        let help = render_app_to_string(&app, 120, 40);
+        assert!(help.contains("Help"));
+        assert!(help.contains("Navigation"));
+        assert!(help.contains("q: quit"));
+
+        app.handle_action(Action::CloseOverlay, &layout);
+        let closed_help = render_app_to_string(&app, 120, 40);
+        assert!(!closed_help.contains("Navigation"));
+
+        app.handle_action(Action::Quit, &layout);
+        assert!(app.should_quit);
     }
 }
