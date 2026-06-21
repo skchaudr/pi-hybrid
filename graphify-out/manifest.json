@@ -15,8 +15,8 @@
     "semantic_hash": ""
   },
   ".remember/tmp/last-save.json": {
-    "mtime": 1782000380.8176224,
-    "ast_hash": "e3c710ad6b0496c4f075c6b8362fed19",
+    "mtime": 1782002571.5879626,
+    "ast_hash": "a6537ef0085ccee3c7e0ce8d0ea2ca8d",
     "semantic_hash": ""
   },
   "py-extensions/src/lib.rs": {
@@ -60,8 +60,8 @@
     "semantic_hash": ""
   },
   "rust-core/src/agent/mod.rs": {
-    "mtime": 1782001080.1092808,
-    "ast_hash": "f4adf8cc138969ef49823f0260fd43f1",
+    "mtime": 1782003191.3582814,
+    "ast_hash": "a6047e46485a5fa989602171d4cfa641",
     "semantic_hash": ""
   },
   "rust-core/src/agent/plan.rs": {
@@ -315,8 +315,8 @@
     "semantic_hash": ""
   },
   "docs/operator.md": {
-    "mtime": 1781544148.6344223,
-    "ast_hash": "506d77c0c83ad8a6babac0eab62adda8",
+    "mtime": 1782002255.0341146,
+    "ast_hash": "a6dbf2e11cb573876f21fabf67859da9",
     "semantic_hash": ""
   },
   "docs/process-containment.md": {
@@ -512,6 +512,16 @@
   "docs/needle-bench.md": {
     "mtime": 1782001950.3639445,
     "ast_hash": "c0974019eafe976e469cf4811e6e1a4a",
+    "semantic_hash": ""
+  },
+  "reviews/needle-adapter-code-review.md": {
+    "mtime": 1782002934.3177087,
+    "ast_hash": "1b2fccbf8cbb6a6fe9619d79e212b7ca",
+    "semantic_hash": ""
+  },
+  "subagent-reviews/bridge-client-review.md": {
+    "mtime": 1782002778.6630952,
+    "ast_hash": "222c1411d580a2674eece375d96259c9",
     "semantic_hash": ""
   }
 }

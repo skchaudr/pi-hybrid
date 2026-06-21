@@ -205,6 +205,11 @@ impl Agent {
         });
 
         if let Some(prompt) = initial_prompt {
+            info!(
+                source = "initial_prompt",
+                prompt_length = prompt.len(),
+                "Dispatching prompt to process_prompt"
+            );
             self.process_prompt(&prompt).await;
         }
 
@@ -218,6 +223,11 @@ impl Agent {
             match self.input_rx.recv().await {
                 Some(AgentInput::UserPrompt(prompt)) => {
                     debug!(%prompt, "Received user prompt");
+                    info!(
+                        source = "user_prompt",
+                        prompt_length = prompt.len(),
+                        "Dispatching prompt to process_prompt"
+                    );
                     self.process_prompt(&prompt).await;
                 }
                 Some(AgentInput::ApprovePlan) => {

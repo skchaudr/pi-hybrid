@@ -1,16 +1,16 @@
 # Graph Report - my-pi-hybrid  (2026-06-20)
 
 ## Corpus Check
-- 102 files · ~79,805 words
+- 104 files · ~80,927 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1840 nodes · 3534 edges · 89 communities (77 shown, 12 thin omitted)
+- 1856 nodes · 3548 edges · 91 communities (79 shown, 12 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 21 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `9e5777cd`
+- Built from commit: `562266ca`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -97,6 +97,8 @@
 - [[_COMMUNITY_Community 84|Community 84]]
 - [[_COMMUNITY_Community 85|Community 85]]
 - [[_COMMUNITY_Community 86|Community 86]]
+- [[_COMMUNITY_Community 89|Community 89]]
+- [[_COMMUNITY_Community 90|Community 90]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `App` - 46 edges
@@ -144,7 +146,7 @@
 - 1-file cycle: `rust-core/src/shutdown.rs -> rust-core/src/shutdown.rs`
 - 1-file cycle: `rust-core/src/tui/agent_pane.rs -> rust-core/src/tui/agent_pane.rs`
 
-## Communities (89 total, 12 thin omitted)
+## Communities (91 total, 12 thin omitted)
 
 ### Community 0 - "Community 0"
 Cohesion: 0.05
@@ -426,8 +428,16 @@ Nodes (9): CompletedProcess, assert_prompt_response_shape(), make_send_prompt_re
 Cohesion: 0.40
 Nodes (4): 04:10-06:30 | force-pushed-phase-5, 05:37-06:00 | force-pushed-phase-5, 06:16 | force-pushed-phase-5, 15:00 | force-pushed-phase-5
 
+### Community 89 - "Community 89"
+Cohesion: 0.20
+Nodes (9): Blocker: `send_prompt` effectively times out after 2s, not `BridgeClient::DEFAULT_TIMEOUT` 30s, Bridge client review, Commands run and results, Correct / no regression found in the latency logging code itself, Findings, Maintainability notes, Overall verdict, Residual risk / confidence (+1 more)
+
+### Community 90 - "Community 90"
+Cohesion: 0.33
+Nodes (5): Correct / covered, Findings, Needle bridge adapter code review, Residual risks / not checked, Tests run
+
 ## Knowledge Gaps
-- **393 isolated node(s):** `Default`, `Option`, `PromptMessage`, `ToolCallResponse`, `TokenUsage` (+388 more)
+- **404 isolated node(s):** `Default`, `Option`, `PromptMessage`, `ToolCallResponse`, `TokenUsage` (+399 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **12 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -441,7 +451,7 @@ _Questions this graph is uniquely positioned to answer:_
 - **Why does `SemanticDiff` connect `Community 7` to `Community 0`?**
   _High betweenness centrality (0.012) - this node is a cross-community bridge._
 - **What connects `Default`, `Option`, `PromptMessage` to the rest of the system?**
-  _394 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _405 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
   _Cohesion score 0.054336468129571575 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**
