@@ -35,8 +35,8 @@
     "semantic_hash": ""
   },
   "rust-core/src/agent/bridge_client.rs": {
-    "mtime": 1781337535.831968,
-    "ast_hash": "ba9d5899fe305b455a3a4c3f450d6692",
+    "mtime": 1782001791.4840915,
+    "ast_hash": "1836173048b85d6c79e6be4039d95616",
     "semantic_hash": ""
   },
   "rust-core/src/agent/compaction.rs": {
@@ -435,8 +435,8 @@
     "semantic_hash": ""
   },
   "AGENTS.md": {
-    "mtime": 1781835492.5007913,
-    "ast_hash": "cef60aabd054ffe9de50475bb87c12b0",
+    "mtime": 1782001668.5409093,
+    "ast_hash": "19deb6ebfae1b91b681510ab567734a4",
     "semantic_hash": ""
   },
   "docs/graphify-vertex-adc.md": {

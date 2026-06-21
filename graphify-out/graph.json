@@ -697,7 +697,7 @@
       "label": ".stream_tokens()",
       "file_type": "code",
       "source_file": "rust-core/src/agent/bridge_client.rs",
-      "source_location": "L276",
+      "source_location": "L281",
       "_origin": "ast",
       "id": "agent_bridge_client_bridgeclient_stream_tokens",
       "community": 6,
@@ -707,7 +707,7 @@
       "label": "UnboundedReceiver",
       "file_type": "code",
       "source_file": "rust-core/src/agent/bridge_client.rs",
-      "source_location": "L276",
+      "source_location": "L281",
       "_origin": "ast",
       "id": "rust_core_src_agent_bridge_client_rs_unboundedreceiver",
       "community": 6,
@@ -717,7 +717,7 @@
       "label": ".cancel()",
       "file_type": "code",
       "source_file": "rust-core/src/agent/bridge_client.rs",
-      "source_location": "L322",
+      "source_location": "L327",
       "_origin": "ast",
       "id": "agent_bridge_client_bridgeclient_cancel",
       "community": 6,
@@ -727,7 +727,7 @@
       "label": ".list_skills()",
       "file_type": "code",
       "source_file": "rust-core/src/agent/bridge_client.rs",
-      "source_location": "L340",
+      "source_location": "L345",
       "_origin": "ast",
       "id": "agent_bridge_client_bridgeclient_list_skills",
       "community": 6,
@@ -737,7 +737,7 @@
       "label": ".compact_context()",
       "file_type": "code",
       "source_file": "rust-core/src/agent/bridge_client.rs",
-      "source_location": "L365",
+      "source_location": "L370",
       "_origin": "ast",
       "id": "agent_bridge_client_bridgeclient_compact_context",
       "community": 6,
@@ -747,7 +747,7 @@
       "label": ".reconnect()",
       "file_type": "code",
       "source_file": "rust-core/src/agent/bridge_client.rs",
-      "source_location": "L404",
+      "source_location": "L409",
       "_origin": "ast",
       "id": "agent_bridge_client_bridgeclient_reconnect",
       "community": 6,
@@ -757,7 +757,7 @@
       "label": ".reconnect_attempts()",
       "file_type": "code",
       "source_file": "rust-core/src/agent/bridge_client.rs",
-      "source_location": "L433",
+      "source_location": "L438",
       "_origin": "ast",
       "id": "agent_bridge_client_bridgeclient_reconnect_attempts",
       "community": 6,
@@ -767,7 +767,7 @@
       "label": ".reset_reconnect_attempts()",
       "file_type": "code",
       "source_file": "rust-core/src/agent/bridge_client.rs",
-      "source_location": "L438",
+      "source_location": "L443",
       "_origin": "ast",
       "id": "agent_bridge_client_bridgeclient_reset_reconnect_attempts",
       "community": 6,
@@ -777,7 +777,7 @@
       "label": "default_system_prompt()",
       "file_type": "code",
       "source_file": "rust-core/src/agent/bridge_client.rs",
-      "source_location": "L444",
+      "source_location": "L449",
       "_origin": "ast",
       "id": "agent_bridge_client_default_system_prompt",
       "community": 6,
@@ -787,7 +787,7 @@
       "label": "prompt_params_serialization()",
       "file_type": "code",
       "source_file": "rust-core/src/agent/bridge_client.rs",
-      "source_location": "L461",
+      "source_location": "L466",
       "_origin": "ast",
       "id": "agent_bridge_client_prompt_params_serialization",
       "community": 6,
@@ -797,7 +797,7 @@
       "label": "prompt_response_deserialization()",
       "file_type": "code",
       "source_file": "rust-core/src/agent/bridge_client.rs",
-      "source_location": "L482",
+      "source_location": "L487",
       "_origin": "ast",
       "id": "agent_bridge_client_prompt_response_deserialization",
       "community": 6,
@@ -807,7 +807,7 @@
       "label": "compact_context_params()",
       "file_type": "code",
       "source_file": "rust-core/src/agent/bridge_client.rs",
-      "source_location": "L496",
+      "source_location": "L501",
       "_origin": "ast",
       "id": "agent_bridge_client_compact_context_params",
       "community": 6,
@@ -817,7 +817,7 @@
       "label": "token_chunk_serialization()",
       "file_type": "code",
       "source_file": "rust-core/src/agent/bridge_client.rs",
-      "source_location": "L511",
+      "source_location": "L516",
       "_origin": "ast",
       "id": "agent_bridge_client_token_chunk_serialization",
       "community": 6,
@@ -827,7 +827,7 @@
       "label": "default_system_prompt_is_not_empty()",
       "file_type": "code",
       "source_file": "rust-core/src/agent/bridge_client.rs",
-      "source_location": "L522",
+      "source_location": "L527",
       "_origin": "ast",
       "id": "agent_bridge_client_default_system_prompt_is_not_empty",
       "community": 6,
@@ -837,7 +837,7 @@
       "label": "reconnect_attempts_tracking()",
       "file_type": "code",
       "source_file": "rust-core/src/agent/bridge_client.rs",
-      "source_location": "L529",
+      "source_location": "L534",
       "_origin": "ast",
       "id": "agent_bridge_client_reconnect_attempts_tracking",
       "community": 6,
@@ -847,7 +847,7 @@
       "label": "prompt_message_serialization()",
       "file_type": "code",
       "source_file": "rust-core/src/agent/bridge_client.rs",
-      "source_location": "L536",
+      "source_location": "L541",
       "_origin": "ast",
       "id": "agent_bridge_client_prompt_message_serialization",
       "community": 6,
@@ -857,7 +857,7 @@
       "label": "token_usage_struct()",
       "file_type": "code",
       "source_file": "rust-core/src/agent/bridge_client.rs",
-      "source_location": "L548",
+      "source_location": "L553",
       "_origin": "ast",
       "id": "agent_bridge_client_token_usage_struct",
       "community": 6,
@@ -867,7 +867,7 @@
       "label": "tool_call_response_struct()",
       "file_type": "code",
       "source_file": "rust-core/src/agent/bridge_client.rs",
-      "source_location": "L560",
+      "source_location": "L565",
       "_origin": "ast",
       "id": "agent_bridge_client_tool_call_response_struct",
       "community": 6,
@@ -877,7 +877,7 @@
       "label": "compact_context_response_struct()",
       "file_type": "code",
       "source_file": "rust-core/src/agent/bridge_client.rs",
-      "source_location": "L572",
+      "source_location": "L577",
       "_origin": "ast",
       "id": "agent_bridge_client_compact_context_response_struct",
       "community": 6,
@@ -887,7 +887,7 @@
       "label": "default_timeout_is_30_seconds()",
       "file_type": "code",
       "source_file": "rust-core/src/agent/bridge_client.rs",
-      "source_location": "L582",
+      "source_location": "L587",
       "_origin": "ast",
       "id": "agent_bridge_client_default_timeout_is_30_seconds",
       "community": 6,
@@ -897,7 +897,7 @@
       "label": "prompt_params_no_system()",
       "file_type": "code",
       "source_file": "rust-core/src/agent/bridge_client.rs",
-      "source_location": "L587",
+      "source_location": "L592",
       "_origin": "ast",
       "id": "agent_bridge_client_prompt_params_no_system",
       "community": 6,
@@ -907,7 +907,7 @@
       "label": "prompt_message_no_tool_calls()",
       "file_type": "code",
       "source_file": "rust-core/src/agent/bridge_client.rs",
-      "source_location": "L602",
+      "source_location": "L607",
       "_origin": "ast",
       "id": "agent_bridge_client_prompt_message_no_tool_calls",
       "community": 6,
@@ -917,7 +917,7 @@
       "label": "prompt_response_minimal()",
       "file_type": "code",
       "source_file": "rust-core/src/agent/bridge_client.rs",
-      "source_location": "L613",
+      "source_location": "L618",
       "_origin": "ast",
       "id": "agent_bridge_client_prompt_response_minimal",
       "community": 6,
@@ -927,7 +927,7 @@
       "label": "token_chunk_done()",
       "file_type": "code",
       "source_file": "rust-core/src/agent/bridge_client.rs",
-      "source_location": "L623",
+      "source_location": "L628",
       "_origin": "ast",
       "id": "agent_bridge_client_token_chunk_done",
       "community": 6,
@@ -16368,6 +16368,16 @@
       "id": "agents_build_verify_rust_core",
       "community": 78,
       "norm_label": "build & verify (rust-core)"
+    },
+    {
+      "label": "Needle benchmark",
+      "file_type": "document",
+      "source_file": "AGENTS.md",
+      "source_location": "L30",
+      "_origin": "ast",
+      "id": "agents_needle_benchmark",
+      "community": 78,
+      "norm_label": "needle benchmark"
     },
     {
       "label": "MISSION.md",
@@ -51038,9 +51048,9 @@
       "source_file": "scripts/test_needle_bridge_adapter.py",
       "source_location": "L37",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_test_needle_bridge_adapter",
-      "target": "scripts_test_needle_bridge_adapter_parse_adapter_responses",
-      "confidence_score": 1.0
+      "target": "scripts_test_needle_bridge_adapter_parse_adapter_responses"
     },
     {
       "relation": "contains",
@@ -51058,9 +51068,9 @@
       "source_file": "scripts/test_needle_bridge_adapter.py",
       "source_location": "L19",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_test_needle_bridge_adapter",
-      "target": "scripts_test_needle_bridge_adapter_run_adapter_completed",
-      "confidence_score": 1.0
+      "target": "scripts_test_needle_bridge_adapter_run_adapter_completed"
     },
     {
       "relation": "calls",
@@ -51069,9 +51079,9 @@
       "source_file": "scripts/test_needle_bridge_adapter.py",
       "source_location": "L266",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_test_needle_bridge_adapter_needlebridgeadaptertests_test_empty_route_stdout_logs_error_and_forwards",
-      "target": "scripts_test_needle_bridge_adapter_run_adapter_completed",
-      "confidence_score": 1.0
+      "target": "scripts_test_needle_bridge_adapter_run_adapter_completed"
     },
     {
       "relation": "calls",
@@ -51080,9 +51090,9 @@
       "source_file": "scripts/test_needle_bridge_adapter.py",
       "source_location": "L48",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_test_needle_bridge_adapter_run_adapter",
-      "target": "scripts_test_needle_bridge_adapter_run_adapter_completed",
-      "confidence_score": 1.0
+      "target": "scripts_test_needle_bridge_adapter_run_adapter_completed"
     },
     {
       "relation": "references",
@@ -51091,9 +51101,9 @@
       "source_file": "scripts/test_needle_bridge_adapter.py",
       "source_location": "L19",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_test_needle_bridge_adapter_run_adapter_completed",
-      "target": "completedprocess",
-      "confidence_score": 1.0
+      "target": "completedprocess"
     },
     {
       "relation": "references",
@@ -51102,9 +51112,9 @@
       "source_file": "scripts/test_needle_bridge_adapter.py",
       "source_location": "L19",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_test_needle_bridge_adapter_run_adapter_completed",
-      "target": "scripts_test_needle_bridge_adapter_py_path",
-      "confidence_score": 1.0
+      "target": "scripts_test_needle_bridge_adapter_py_path"
     },
     {
       "relation": "calls",
@@ -51135,9 +51145,9 @@
       "source_file": "scripts/test_needle_bridge_adapter.py",
       "source_location": "L276",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_test_needle_bridge_adapter_needlebridgeadaptertests_test_empty_route_stdout_logs_error_and_forwards",
-      "target": "scripts_test_needle_bridge_adapter_parse_adapter_responses",
-      "confidence_score": 1.0
+      "target": "scripts_test_needle_bridge_adapter_parse_adapter_responses"
     },
     {
       "relation": "calls",
@@ -51146,9 +51156,9 @@
       "source_file": "scripts/test_needle_bridge_adapter.py",
       "source_location": "L49",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_test_needle_bridge_adapter_run_adapter",
-      "target": "scripts_test_needle_bridge_adapter_parse_adapter_responses",
-      "confidence_score": 1.0
+      "target": "scripts_test_needle_bridge_adapter_parse_adapter_responses"
     },
     {
       "relation": "calls",
@@ -51212,9 +51222,9 @@
       "source_file": "scripts/test_needle_bridge_adapter.py",
       "source_location": "L267",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_test_needle_bridge_adapter_needlebridgeadaptertests_test_empty_route_stdout_logs_error_and_forwards",
-      "target": "scripts_test_needle_bridge_adapter_make_send_prompt_request",
-      "confidence_score": 1.0
+      "target": "scripts_test_needle_bridge_adapter_make_send_prompt_request"
     },
     {
       "relation": "calls",
@@ -51267,9 +51277,9 @@
       "source_file": "scripts/test_needle_bridge_adapter.py",
       "source_location": "L278",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_test_needle_bridge_adapter_needlebridgeadaptertests_test_empty_route_stdout_logs_error_and_forwards",
-      "target": "scripts_test_needle_bridge_adapter_assert_prompt_response_shape",
-      "confidence_score": 1.0
+      "target": "scripts_test_needle_bridge_adapter_assert_prompt_response_shape"
     },
     {
       "relation": "calls",
@@ -51329,9 +51339,9 @@
       "source_file": "scripts/test_needle_bridge_adapter.py",
       "source_location": "L233",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_test_needle_bridge_adapter_needlebridgeadaptertests",
-      "target": "scripts_test_needle_bridge_adapter_needlebridgeadaptertests_test_empty_route_stdout_logs_error_and_forwards",
-      "confidence_score": 1.0
+      "target": "scripts_test_needle_bridge_adapter_needlebridgeadaptertests_test_empty_route_stdout_logs_error_and_forwards"
     },
     {
       "relation": "method",
@@ -53985,6 +53995,16 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "AGENTS.md",
+      "source_location": "L30",
+      "weight": 1.0,
+      "source": "agents",
+      "target": "agents_needle_benchmark",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "MISSION.md",
       "source_location": "L1",
       "weight": 1.0,
@@ -55804,5 +55824,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "f38f8f001d09d4109b71fb2b59f09057ed6ca924"
+  "built_at_commit": "af202bcecf36fffbe1cfc3afe8889a55153faf31"
 }

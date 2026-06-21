@@ -1,16 +1,16 @@
 # Graph Report - my-pi-hybrid  (2026-06-20)
 
 ## Corpus Check
-- 101 files · ~79,682 words
+- 101 files · ~79,741 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1837 nodes · 3531 edges · 88 communities (75 shown, 13 thin omitted)
+- 1838 nodes · 3532 edges · 88 communities (76 shown, 12 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 20 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `f38f8f00`
+- Built from commit: `af202bce`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -144,7 +144,7 @@
 - 1-file cycle: `rust-core/src/shutdown.rs -> rust-core/src/shutdown.rs`
 - 1-file cycle: `rust-core/src/tui/agent_pane.rs -> rust-core/src/tui/agent_pane.rs`
 
-## Communities (88 total, 13 thin omitted)
+## Communities (88 total, 12 thin omitted)
 
 ### Community 0 - "Community 0"
 Cohesion: 0.05
@@ -414,6 +414,10 @@ Nodes (3): For --cluster-only, For --update (incremental re-extraction), graphif
 Cohesion: 0.50
 Nodes (3): OPENAI_API_KEY, OPENAI_BASE_URL, graphify-vertex-extract.sh script
 
+### Community 78 - "Community 78"
+Cohesion: 0.50
+Nodes (3): Build & verify (rust-core), graphify, Needle benchmark
+
 ### Community 81 - "Community 81"
 Cohesion: 0.25
 Nodes (9): CompletedProcess, assert_prompt_response_shape(), make_send_prompt_request(), NeedleBridgeAdapterTests, parse_adapter_responses(), Path, run_adapter(), run_adapter_completed() (+1 more)
@@ -423,9 +427,9 @@ Cohesion: 0.40
 Nodes (4): 04:10-06:30 | force-pushed-phase-5, 05:37-06:00 | force-pushed-phase-5, 06:16 | force-pushed-phase-5, 15:00 | force-pushed-phase-5
 
 ## Knowledge Gaps
-- **392 isolated node(s):** `Default`, `Option`, `PromptMessage`, `ToolCallResponse`, `TokenUsage` (+387 more)
+- **393 isolated node(s):** `Default`, `Option`, `PromptMessage`, `ToolCallResponse`, `TokenUsage` (+388 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **13 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **12 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
@@ -437,7 +441,7 @@ _Questions this graph is uniquely positioned to answer:_
 - **Why does `SemanticDiff` connect `Community 7` to `Community 0`?**
   _High betweenness centrality (0.012) - this node is a cross-community bridge._
 - **What connects `Default`, `Option`, `PromptMessage` to the rest of the system?**
-  _393 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _394 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
   _Cohesion score 0.054336468129571575 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**
