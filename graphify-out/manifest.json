@@ -460,8 +460,8 @@
     "semantic_hash": ""
   },
   "scripts/needle_bridge_adapter.py": {
-    "mtime": 1782001222.2561245,
-    "ast_hash": "91f4a2cb0629375ba9d3f79c38eb6b04",
+    "mtime": 1782001378.9890041,
+    "ast_hash": "c8a8d74c5b16340441959b6a655b581d",
     "semantic_hash": ""
   },
   "scripts/needle_routing_stats.py": {
@@ -470,8 +470,8 @@
     "semantic_hash": ""
   },
   "scripts/test_needle_bridge_adapter.py": {
-    "mtime": 1782000050.4539883,
-    "ast_hash": "61c1c337cbcab1b1212fe3a5e110ce1f",
+    "mtime": 1782001410.6940393,
+    "ast_hash": "14edbb78f6453e1cca5c1c90067b9801",
     "semantic_hash": ""
   },
   "scripts/test_needle_routing_stats.py": {

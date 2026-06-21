@@ -16,14 +16,14 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 ADAPTER = REPO_ROOT / "scripts" / "needle_bridge_adapter.py"
 
 
-def run_adapter(
+def run_adapter_completed(
     requests: list[dict],
     *,
     env: dict[str, str],
     cwd: Path,
-) -> list[dict]:
+) -> subprocess.CompletedProcess[str]:
     stdin = "\n".join(json.dumps(req) for req in requests) + "\n"
-    completed = subprocess.run(
+    return subprocess.run(
         [sys.executable, str(ADAPTER)],
         input=stdin,
         capture_output=True,
@@ -32,8 +32,21 @@ def run_adapter(
         env=env,
         check=True,
     )
-    lines = [line for line in completed.stdout.splitlines() if line.strip()]
+
+
+def parse_adapter_responses(stdout: str) -> list[dict]:
+    lines = [line for line in stdout.splitlines() if line.strip()]
     return [json.loads(line) for line in lines]
+
+
+def run_adapter(
+    requests: list[dict],
+    *,
+    env: dict[str, str],
+    cwd: Path,
+) -> list[dict]:
+    completed = run_adapter_completed(requests, env=env, cwd=cwd)
+    return parse_adapter_responses(completed.stdout)
 
 
 def make_send_prompt_request(request_id: int, prompt: str) -> dict:
@@ -216,6 +229,54 @@ class NeedleBridgeAdapterTests(unittest.TestCase):
         result = responses[0]["result"]
         assert_prompt_response_shape(self, result)
         self.assertIn("fallback:do something fuzzy", result["content"])
+
+    def test_empty_route_stdout_logs_error_and_forwards(self) -> None:
+        mock_route = self.workspace / "mock_pi_route_empty.py"
+        mock_route.write_text(
+            "#!/usr/bin/env python3\n",
+            encoding="utf-8",
+        )
+        mock_route.chmod(0o755)
+
+        mock_pi = self.workspace / "mock_pi.py"
+        mock_pi.write_text(
+            textwrap.dedent(
+                """
+                #!/usr/bin/env python3
+                import json, sys
+                prompt = sys.argv[-1]
+                print(json.dumps({
+                    "type": "message_end",
+                    "message": {
+                        "role": "assistant",
+                        "content": [{"type": "text", "text": f"fallback:{prompt}"}],
+                        "usage": {"input": 3, "output": 2, "totalTokens": 5},
+                    },
+                }))
+                """
+            ).strip()
+            + "\n",
+            encoding="utf-8",
+        )
+        mock_pi.chmod(0o755)
+
+        self.env["NEEDLE_ROUTE_BIN"] = str(mock_route)
+        self.env["PI_CMD"] = str(mock_pi)
+
+        completed = run_adapter_completed(
+            [make_send_prompt_request(13, "empty route stdout")],
+            env=self.env,
+            cwd=self.workspace,
+        )
+
+        self.assertIn(
+            "needle_bridge_adapter: pi-route returned empty stdout with exit 0: no stderr",
+            completed.stderr,
+        )
+        responses = parse_adapter_responses(completed.stdout)
+        result = responses[0]["result"]
+        assert_prompt_response_shape(self, result)
+        self.assertIn("fallback:empty route stdout", result["content"])
 
     def test_unknown_method_returns_json_rpc_error(self) -> None:
         responses = run_adapter(

@@ -1,16 +1,16 @@
 # Graph Report - my-pi-hybrid  (2026-06-20)
 
 ## Corpus Check
-- 101 files · ~79,540 words
+- 101 files · ~79,682 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1833 nodes · 3520 edges · 88 communities (75 shown, 13 thin omitted)
+- 1837 nodes · 3531 edges · 88 communities (75 shown, 13 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 20 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `ad10f659`
+- Built from commit: `f38f8f00`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -415,15 +415,15 @@ Cohesion: 0.50
 Nodes (3): OPENAI_API_KEY, OPENAI_BASE_URL, graphify-vertex-extract.sh script
 
 ### Community 81 - "Community 81"
-Cohesion: 0.29
-Nodes (6): assert_prompt_response_shape(), make_send_prompt_request(), NeedleBridgeAdapterTests, Path, run_adapter(), TestCase
+Cohesion: 0.25
+Nodes (9): CompletedProcess, assert_prompt_response_shape(), make_send_prompt_request(), NeedleBridgeAdapterTests, parse_adapter_responses(), Path, run_adapter(), run_adapter_completed() (+1 more)
 
 ### Community 82 - "Community 82"
 Cohesion: 0.40
 Nodes (4): 04:10-06:30 | force-pushed-phase-5, 05:37-06:00 | force-pushed-phase-5, 06:16 | force-pushed-phase-5, 15:00 | force-pushed-phase-5
 
 ## Knowledge Gaps
-- **391 isolated node(s):** `Default`, `Option`, `PromptMessage`, `ToolCallResponse`, `TokenUsage` (+386 more)
+- **392 isolated node(s):** `Default`, `Option`, `PromptMessage`, `ToolCallResponse`, `TokenUsage` (+387 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **13 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -437,7 +437,7 @@ _Questions this graph is uniquely positioned to answer:_
 - **Why does `SemanticDiff` connect `Community 7` to `Community 0`?**
   _High betweenness centrality (0.012) - this node is a cross-community bridge._
 - **What connects `Default`, `Option`, `PromptMessage` to the rest of the system?**
-  _392 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _393 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
   _Cohesion score 0.054336468129571575 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**

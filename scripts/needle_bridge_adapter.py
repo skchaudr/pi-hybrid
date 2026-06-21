@@ -136,6 +136,11 @@ def call_needle_route(prompt: str) -> dict[str, Any] | None:
 
     stdout = completed.stdout.strip()
     if not stdout:
+        detail = completed.stderr.strip() or "no stderr"
+        sys.stderr.write(
+            "needle_bridge_adapter: pi-route returned empty stdout "
+            f"with exit {completed.returncode}: {detail}\n"
+        )
         return None
 
     try:
