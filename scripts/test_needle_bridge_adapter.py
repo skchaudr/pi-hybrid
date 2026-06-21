@@ -14,6 +14,10 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 ADAPTER = REPO_ROOT / "scripts" / "needle_bridge_adapter.py"
+if str(ADAPTER.parent) not in sys.path:
+    sys.path.insert(0, str(ADAPTER.parent))
+
+from needle_bridge_adapter import extract_last_user_prompt
 
 
 def run_adapter_completed(
@@ -85,6 +89,25 @@ class NeedleBridgeAdapterTests(unittest.TestCase):
 
     def tearDown(self) -> None:
         self.temp_dir.cleanup()
+
+    def test_extract_last_user_prompt_joins_list_content(self) -> None:
+        params = {
+            "messages": [
+                {"role": "user", "content": "older prompt"},
+                {"role": "assistant", "content": "assistant reply"},
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "text", "text": "read "},
+                        {"type": "image_url", "image_url": {"url": "ignored"}},
+                        "the ",
+                        {"type": "text", "text": "file"},
+                    ],
+                },
+            ]
+        }
+
+        self.assertEqual(extract_last_user_prompt(params), "read the file")
 
     def test_read_file_route_executes_locally(self) -> None:
         target = self.workspace / "sample.txt"

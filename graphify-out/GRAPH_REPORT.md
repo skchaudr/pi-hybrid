@@ -1,16 +1,16 @@
 # Graph Report - my-pi-hybrid  (2026-06-20)
 
 ## Corpus Check
-- 101 files · ~79,741 words
+- 102 files · ~79,805 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1838 nodes · 3532 edges · 88 communities (76 shown, 12 thin omitted)
-- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 20 edges (avg confidence: 0.8)
+- 1840 nodes · 3534 edges · 89 communities (77 shown, 12 thin omitted)
+- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 21 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `af202bce`
+- Built from commit: `9e5777cd`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -144,7 +144,7 @@
 - 1-file cycle: `rust-core/src/shutdown.rs -> rust-core/src/shutdown.rs`
 - 1-file cycle: `rust-core/src/tui/agent_pane.rs -> rust-core/src/tui/agent_pane.rs`
 
-## Communities (88 total, 12 thin omitted)
+## Communities (89 total, 12 thin omitted)
 
 ### Community 0 - "Community 0"
 Cohesion: 0.05
@@ -419,7 +419,7 @@ Cohesion: 0.50
 Nodes (3): Build & verify (rust-core), graphify, Needle benchmark
 
 ### Community 81 - "Community 81"
-Cohesion: 0.25
+Cohesion: 0.23
 Nodes (9): CompletedProcess, assert_prompt_response_shape(), make_send_prompt_request(), NeedleBridgeAdapterTests, parse_adapter_responses(), Path, run_adapter(), run_adapter_completed() (+1 more)
 
 ### Community 82 - "Community 82"

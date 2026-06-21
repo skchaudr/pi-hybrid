@@ -470,8 +470,8 @@
     "semantic_hash": ""
   },
   "scripts/test_needle_bridge_adapter.py": {
-    "mtime": 1782001410.6940393,
-    "ast_hash": "14edbb78f6453e1cca5c1c90067b9801",
+    "mtime": 1782002055.0528057,
+    "ast_hash": "b59f6750a638e4f0d0d977ec9e902825",
     "semantic_hash": ""
   },
   "scripts/test_needle_routing_stats.py": {
@@ -507,6 +507,11 @@
   ".remember/today-2026-06-20.md": {
     "mtime": 1781999248.6503804,
     "ast_hash": "a35a0c90e5b6cb6737562aca8ed84362",
+    "semantic_hash": ""
+  },
+  "docs/needle-bench.md": {
+    "mtime": 1782001950.3639445,
+    "ast_hash": "c0974019eafe976e469cf4811e6e1a4a",
     "semantic_hash": ""
   }
 }
