@@ -137,7 +137,7 @@ impl BridgeClient {
     #[instrument(skip(command))]
     pub async fn connect(command: &str) -> anyhow::Result<Self> {
         info!(%command, "Connecting to bridge");
-        let bridge = Bridge::new(command)
+        let bridge = Bridge::with_timeout(command, DEFAULT_TIMEOUT)
             .await
             .context("Failed to start bridge process")?;
 
@@ -160,7 +160,7 @@ impl BridgeClient {
         provider: ProviderConfig,
     ) -> anyhow::Result<Self> {
         info!("Connecting to bridge with provider");
-        let bridge = Bridge::new(command)
+        let bridge = Bridge::with_timeout(command, DEFAULT_TIMEOUT)
             .await
             .context("Failed to start bridge process")?;
 
@@ -423,7 +423,7 @@ impl BridgeClient {
         warn!(attempt = self.reconnect_attempts, "Reconnecting to bridge");
 
         // Dropping the old bridge will kill the child process
-        let bridge = Bridge::new(command)
+        let bridge = Bridge::with_timeout(command, DEFAULT_TIMEOUT)
             .await
             .context("Failed to reconnect bridge")?;
 
@@ -586,6 +586,43 @@ mod tests {
     #[test]
     fn default_timeout_is_30_seconds() {
         assert_eq!(DEFAULT_TIMEOUT, Duration::from_secs(30));
+    }
+
+    /// Regression: Bridge::new() uses a 2s read timeout; connect paths must pass
+    /// BridgeClient::DEFAULT_TIMEOUT (30s) so slow real responses aren't cut off early.
+    #[tokio::test]
+    async fn connect_uses_client_default_timeout() {
+        let mock = concat!(
+            "sh -c 'sleep 3; ",
+            "printf \"{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":1,\\\"result\\\":[\\\"ok\\\"]}\\n\"'",
+        );
+        let mut client = BridgeClient::connect(mock).await.unwrap();
+        let skills = client.list_skills().await;
+
+        assert!(
+            skills.is_ok(),
+            "3s mock response should succeed with 30s bridge timeout, got {:?}",
+            skills.err()
+        );
+        assert_eq!(skills.unwrap(), vec!["ok".to_string()]);
+    }
+
+    #[tokio::test]
+    async fn reconnect_uses_client_default_timeout() {
+        let mock = concat!(
+            "sh -c 'sleep 3; ",
+            "printf \"{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":1,\\\"result\\\":[\\\"ok\\\"]}\\n\"'",
+        );
+        let mut client = BridgeClient::connect("true").await.unwrap();
+        client.reconnect(mock).await.unwrap();
+        let skills = client.list_skills().await;
+
+        assert!(
+            skills.is_ok(),
+            "3s mock response after reconnect should succeed with 30s bridge timeout, got {:?}",
+            skills.err()
+        );
+        assert_eq!(skills.unwrap(), vec!["ok".to_string()]);
     }
 
     #[test]
