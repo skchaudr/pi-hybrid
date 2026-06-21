@@ -45,7 +45,7 @@ cargo run -p rust-core
 
 Quit with `q`.
 
-## Install And Build
+## Install and Build
 
 This repository is a Cargo workspace with these active members:
 
@@ -430,6 +430,6 @@ For docs-only runbook updates, verify the required sections exist and smoke-test
 the config example:
 
 ```sh
-rg -n "Install And Build|Run Modes|Configuration|Environment Variables|CLI Flags|Troubleshooting" docs/operator.md
+rg -n "Install and Build|Run Modes|Configuration|Environment Variables|CLI Flags|Troubleshooting" docs/operator.md
 cargo run -p rust-core -- --validate-config --config /tmp/pi-hybrid-operator.toml
 ```
