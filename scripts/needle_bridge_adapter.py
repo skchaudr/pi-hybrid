@@ -119,7 +119,7 @@ def call_needle_route(prompt: str) -> dict[str, Any] | None:
             [needle_route_bin(), prompt],
             capture_output=True,
             text=True,
-            timeout=int(os.environ.get("NEEDLE_ROUTE_TIMEOUT", "45")),
+            timeout=int(os.environ.get("NEEDLE_ROUTE_TIMEOUT", "60")),
             env=env,
             check=False,
         )

@@ -460,8 +460,8 @@
     "semantic_hash": ""
   },
   "scripts/needle_bridge_adapter.py": {
-    "mtime": 1782000041.0495687,
-    "ast_hash": "5527a5e3651d03f5886be0a9aed0886d",
+    "mtime": 1782001222.2561245,
+    "ast_hash": "91f4a2cb0629375ba9d3f79c38eb6b04",
     "semantic_hash": ""
   },
   "scripts/needle_routing_stats.py": {
