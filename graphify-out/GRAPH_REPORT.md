@@ -1,16 +1,16 @@
-# Graph Report - my-pi-hybrid  (2026-06-18)
+# Graph Report - my-pi-hybrid  (2026-06-20)
 
 ## Corpus Check
-- 91 files · ~73,877 words
+- 101 files · ~79,540 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1732 nodes · 3294 edges · 83 communities (72 shown, 11 thin omitted)
-- Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 8 edges (avg confidence: 0.8)
+- 1833 nodes · 3520 edges · 88 communities (75 shown, 13 thin omitted)
+- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 20 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `d437c1c5`
+- Built from commit: `ad10f659`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -93,9 +93,13 @@
 - [[_COMMUNITY_Community 80|Community 80]]
 - [[_COMMUNITY_Community 81|Community 81]]
 - [[_COMMUNITY_Community 82|Community 82]]
+- [[_COMMUNITY_Community 83|Community 83]]
+- [[_COMMUNITY_Community 84|Community 84]]
+- [[_COMMUNITY_Community 85|Community 85]]
+- [[_COMMUNITY_Community 86|Community 86]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `App` - 44 edges
+1. `App` - 46 edges
 2. `config_with_defaults()` - 31 edges
 3. `render_to_string()` - 28 edges
 4. `PluginRegistry` - 26 edges
@@ -107,7 +111,16 @@
 10. `ProviderRegistry` - 21 edges
 
 ## Surprising Connections (you probably didn't know these)
-- None detected - all connections are within the same source files.
+- `run_pi_direct()` --calls--> `forward_to_pi()`  [INFERRED]
+  scripts/needle_bench.py → scripts/needle_bridge_adapter.py
+- `print_live_usage_summary()` --calls--> `load_stats()`  [INFERRED]
+  scripts/needle_bench.py → scripts/needle_routing_stats.py
+- `print_live_usage_summary()` --calls--> `stats_path()`  [INFERRED]
+  scripts/needle_bench.py → scripts/needle_routing_stats.py
+- `print_live_usage_summary()` --calls--> `summarize_stats()`  [INFERRED]
+  scripts/needle_bench.py → scripts/needle_routing_stats.py
+- `main()` --calls--> `workspace_root()`  [INFERRED]
+  scripts/needle_bench.py → scripts/needle_bridge_adapter.py
 
 ## Import Cycles
 - 1-file cycle: `rust-core/benches/bench_main.rs -> rust-core/benches/bench_main.rs`
@@ -131,11 +144,11 @@
 - 1-file cycle: `rust-core/src/shutdown.rs -> rust-core/src/shutdown.rs`
 - 1-file cycle: `rust-core/src/tui/agent_pane.rs -> rust-core/src/tui/agent_pane.rs`
 
-## Communities (83 total, 11 thin omitted)
+## Communities (88 total, 13 thin omitted)
 
 ### Community 0 - "Community 0"
-Cohesion: 0.06
-Nodes (62): Action, AgentInput, AgentPane, bench_config_load_parse(), bench_sqlite_session_save_load(), bench_tui_frame_render(), Command, CommandPalette (+54 more)
+Cohesion: 0.05
+Nodes (65): Action, AgentInput, AgentPane, bench_config_load_parse(), bench_sqlite_session_save_load(), bench_tui_frame_render(), Command, CommandPalette (+57 more)
 
 ### Community 1 - "Community 1"
 Cohesion: 0.06
@@ -167,11 +180,11 @@ Nodes (42): Default, Frame, Option, Pane, Rect, Self, String, Vec (+34 more)
 
 ### Community 8 - "Community 8"
 Cohesion: 0.09
-Nodes (40): DiagramEdge, DiagramNode, EdgeStyle, Line, MermaidType, NodeShape, Frame, Option (+32 more)
+Nodes (41): DiagramEdge, DiagramNode, EdgeStyle, Line, MermaidType, NodeShape, Frame, Option (+33 more)
 
 ### Community 9 - "Community 9"
 Cohesion: 0.06
-Nodes (28): Frame, Into, Option, Pane, Path, PathBuf, Rect, Self (+20 more)
+Nodes (29): Frame, Into, Option, Pane, Path, PathBuf, Rect, Self (+21 more)
 
 ### Community 10 - "Community 10"
 Cohesion: 0.11
@@ -191,7 +204,7 @@ Nodes (33): AtomicBool, Arc, BridgeClient, Default, Drop, GitManager, JoinHandle
 
 ### Community 14 - "Community 14"
 Cohesion: 0.10
-Nodes (26): Frame, Option, PathBuf, Rect, Self, String, Vec, all_base_commands_have_non_empty_names() (+18 more)
+Nodes (27): Frame, Option, PathBuf, Rect, Self, String, Vec, all_base_commands_have_non_empty_names() (+19 more)
 
 ### Community 15 - "Community 15"
 Cohesion: 0.12
@@ -207,7 +220,7 @@ Nodes (21): build_summarization_prompt_formats_messages(), compact_fallback_summ
 
 ### Community 18 - "Community 18"
 Cohesion: 0.11
-Nodes (27): Agent, agent_channels(), agent_channels_work(), agent_config_defaults(), AgentConfig, AgentInput, AgentOutput, AgentStatus (+19 more)
+Nodes (28): Agent, agent_channels(), agent_channels_work(), agent_config_defaults(), AgentConfig, AgentInput, AgentOutput, AgentStatus (+20 more)
 
 ### Community 19 - "Community 19"
 Cohesion: 0.14
@@ -226,8 +239,8 @@ Cohesion: 0.13
 Nodes (17): Option, Self, String, Style, Vec, compute_with_explicit_language(), detect_syntax_context(), detects_added_and_removed_lines() (+9 more)
 
 ### Community 23 - "Community 23"
-Cohesion: 0.16
-Nodes (18): Agent, agent_config_custom(), agent_config_defaults(), agent_plan_generates_from_messages(), agent_summarize_empty(), agent_with_many_turns(), AgentConfig, AgentOutput (+10 more)
+Cohesion: 0.08
+Nodes (37): Agent, agent_config_custom(), agent_config_defaults(), agent_plan_generates_from_messages(), agent_summarize_empty(), agent_with_many_turns(), AgentConfig, AgentOutput (+29 more)
 
 ### Community 24 - "Community 24"
 Cohesion: 0.08
@@ -238,8 +251,8 @@ Cohesion: 0.14
 Nodes (20): Bridge, bridge_starts_and_reads_mock_response(), bridge_times_out_when_child_is_silent(), JsonRpcRequest, JsonRpcResponse, serialize_request(), serializes_json_rpc_request(), AtomicU64 (+12 more)
 
 ### Community 26 - "Community 26"
-Cohesion: 0.13
-Nodes (20): Frame, Rect, String, centered_rect(), centered_rect_computes_correct_area(), centered_rect_full_area(), centered_rect_minimal(), centered_rect_with_different_percents() (+12 more)
+Cohesion: 0.12
+Nodes (21): Frame, Rect, String, centered_rect(), centered_rect_computes_correct_area(), centered_rect_full_area(), centered_rect_minimal(), centered_rect_with_different_percents() (+13 more)
 
 ### Community 27 - "Community 27"
 Cohesion: 0.08
@@ -255,7 +268,7 @@ Nodes (13): Default, Self, all_toggles_independent(), default_values(), multiple
 
 ### Community 30 - "Community 30"
 Cohesion: 0.16
-Nodes (8): KeyCode, KeyEvent, MouseEvent, Option, Pane, Action, key(), KeyBindings
+Nodes (8): KeyCode, MouseEvent, KeyEvent, Option, Pane, Action, key(), KeyBindings
 
 ### Community 31 - "Community 31"
 Cohesion: 0.25
@@ -341,6 +354,10 @@ Nodes (4): B8 M1 Mac Mini Validation, Commands run, Results, Scope note
 Cohesion: 0.33
 Nodes (5): Build, Graphify (codebase map for agents), Performance, Pi Rust-Core Hybrid Workspace, Workspace Layout
 
+### Community 53 - "Community 53"
+Cohesion: 0.08
+Nodes (56): Namespace, bench_prompt(), classify_needle_content(), expected_is_local(), filter_prompts(), fmt_ms(), fmt_tokens(), load_prompt_set() (+48 more)
+
 ### Community 60 - "Community 60"
 Cohesion: 0.08
 Nodes (23): For /graphify add and --watch, For /graphify query, For the commit hook and native CLAUDE.md integration, For --update and --cluster-only, /graphify, Honesty Rules, Interpreter guard for subcommands, Part A - Structural extraction for code files (+15 more)
@@ -398,27 +415,31 @@ Cohesion: 0.50
 Nodes (3): OPENAI_API_KEY, OPENAI_BASE_URL, graphify-vertex-extract.sh script
 
 ### Community 81 - "Community 81"
-Cohesion: 0.14
-Nodes (19): approval_gates_execution(), ExecutionPlan, PlanStatus, PlanStep, execute_tool(), parse_tool_calls(), Tool, ToolCall (+11 more)
+Cohesion: 0.29
+Nodes (6): assert_prompt_response_shape(), make_send_prompt_request(), NeedleBridgeAdapterTests, Path, run_adapter(), TestCase
+
+### Community 82 - "Community 82"
+Cohesion: 0.40
+Nodes (4): 04:10-06:30 | force-pushed-phase-5, 05:37-06:00 | force-pushed-phase-5, 06:16 | force-pushed-phase-5, 15:00 | force-pushed-phase-5
 
 ## Knowledge Gaps
-- **381 isolated node(s):** `Default`, `Option`, `PromptMessage`, `ToolCallResponse`, `TokenUsage` (+376 more)
+- **391 isolated node(s):** `Default`, `Option`, `PromptMessage`, `ToolCallResponse`, `TokenUsage` (+386 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **11 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **13 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `active_border_style()` connect `Community 9` to `Community 11`, `Community 4`, `Community 7`?**
-  _High betweenness centrality (0.019) - this node is a cross-community bridge._
-- **Why does `SemanticDiff` connect `Community 7` to `Community 0`?**
-  _High betweenness centrality (0.014) - this node is a cross-community bridge._
 - **Why does `Sync` connect `Community 2` to `Community 18`, `Community 12`, `Community 5`?**
+  _High betweenness centrality (0.021) - this node is a cross-community bridge._
+- **Why does `active_border_style()` connect `Community 9` to `Community 11`, `Community 4`, `Community 7`?**
+  _High betweenness centrality (0.016) - this node is a cross-community bridge._
+- **Why does `SemanticDiff` connect `Community 7` to `Community 0`?**
   _High betweenness centrality (0.012) - this node is a cross-community bridge._
 - **What connects `Default`, `Option`, `PromptMessage` to the rest of the system?**
-  _381 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _392 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
-  _Cohesion score 0.05612694681163679 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.054336468129571575 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**
   _Cohesion score 0.05744888023369036 - nodes in this community are weakly interconnected._
 - **Should `Community 2` be split into smaller, more focused modules?**

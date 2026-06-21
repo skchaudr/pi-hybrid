@@ -10,13 +10,13 @@
     "semantic_hash": ""
   },
   ".remember/tmp/last-ndc.ts": {
-    "mtime": 1781829331.377996,
-    "ast_hash": "d5a08f177747e44d6049477f71f6349f",
+    "mtime": 1781999225.6667454,
+    "ast_hash": "dbb359919dd686942a371a844cf4e295",
     "semantic_hash": ""
   },
   ".remember/tmp/last-save.json": {
-    "mtime": 1781829877.3860853,
-    "ast_hash": "d2918fce96701f8e27b4943667b3bb0c",
+    "mtime": 1782000380.8176224,
+    "ast_hash": "e3c710ad6b0496c4f075c6b8362fed19",
     "semantic_hash": ""
   },
   "py-extensions/src/lib.rs": {
@@ -60,8 +60,8 @@
     "semantic_hash": ""
   },
   "rust-core/src/agent/mod.rs": {
-    "mtime": 1781337535.8327847,
-    "ast_hash": "883d6af69a5105d1806bb1028851dd6c",
+    "mtime": 1782001080.1092808,
+    "ast_hash": "f4adf8cc138969ef49823f0260fd43f1",
     "semantic_hash": ""
   },
   "rust-core/src/agent/plan.rs": {
@@ -125,8 +125,8 @@
     "semantic_hash": ""
   },
   "rust-core/src/keybindings.rs": {
-    "mtime": 1781829905.063225,
-    "ast_hash": "e8d268a6d8e69a1bbbeb9086690cd8ee",
+    "mtime": 1781840544.8272235,
+    "ast_hash": "817c2d03bf7e2a1d12fb8f28421a274f",
     "semantic_hash": ""
   },
   "rust-core/src/lib.rs": {
@@ -135,8 +135,8 @@
     "semantic_hash": ""
   },
   "rust-core/src/main.rs": {
-    "mtime": 1781829190.4851696,
-    "ast_hash": "6213cbe7fa68a2596561c95b96770c49",
+    "mtime": 1781840612.811228,
+    "ast_hash": "b2dc7faf36de052ab8b73feb2f73bcf7",
     "semantic_hash": ""
   },
   "rust-core/src/session/mod.rs": {
@@ -165,8 +165,8 @@
     "semantic_hash": ""
   },
   "rust-core/src/tui/command_palette.rs": {
-    "mtime": 1781337535.8374288,
-    "ast_hash": "4f752931200bac1067663b59f66b8c45",
+    "mtime": 1781831396.073575,
+    "ast_hash": "62f93518d165c447be248d854fc7650b",
     "semantic_hash": ""
   },
   "rust-core/src/tui/editor_pane.rs": {
@@ -175,18 +175,18 @@
     "semantic_hash": ""
   },
   "rust-core/src/tui/file_tree.rs": {
-    "mtime": 1781337535.8379116,
-    "ast_hash": "b2965eff855109f8486bd5b2580b2310",
+    "mtime": 1781840648.8047101,
+    "ast_hash": "27ffa4cfcc554a0442fb1c9db4e2f6b1",
     "semantic_hash": ""
   },
   "rust-core/src/tui/help_popup.rs": {
-    "mtime": 1781337535.8380303,
-    "ast_hash": "149260ed1986866a3e85de32d26174f8",
+    "mtime": 1781840648.8061538,
+    "ast_hash": "a0332d4e86c128e96a396091a56f4301",
     "semantic_hash": ""
   },
   "rust-core/src/tui/mermaid.rs": {
-    "mtime": 1781358779.4939158,
-    "ast_hash": "013509dc42e04fd38752d5eac26d5109",
+    "mtime": 1781840648.8087618,
+    "ast_hash": "6c24fde108d4a51d5471e02a77bd1ef0",
     "semantic_hash": ""
   },
   "rust-core/src/tui/mod.rs": {
@@ -240,13 +240,8 @@
     "semantic_hash": ""
   },
   ".remember/now.md": {
-    "mtime": 1781829877.335959,
-    "ast_hash": "b654154177228041769e918ad7820f14",
-    "semantic_hash": ""
-  },
-  ".remember/today-2026-06-18.md": {
-    "mtime": 1781783343.360335,
-    "ast_hash": "cc02a6396244e0f0e432f57491114f32",
+    "mtime": 1782000380.777785,
+    "ast_hash": "11c8e4db70df86706e52d961fc8a0ae4",
     "semantic_hash": ""
   },
   "MISSION.md": {
@@ -440,8 +435,8 @@
     "semantic_hash": ""
   },
   "AGENTS.md": {
-    "mtime": 1781828608.8715942,
-    "ast_hash": "ef9661afd23657bd5df6e98c660810fb",
+    "mtime": 1781835492.5007913,
+    "ast_hash": "cef60aabd054ffe9de50475bb87c12b0",
     "semantic_hash": ""
   },
   "docs/graphify-vertex-adc.md": {
@@ -454,9 +449,64 @@
     "ast_hash": "e8589670e377159d737e0730289280fa",
     "semantic_hash": ""
   },
-  ".remember/today-2026-06-19.md": {
-    "mtime": 1781829352.0476608,
-    "ast_hash": "9b59b68bfe8fc0522a8728f4e9714e58",
+  "scripts/needle_bench.py": {
+    "mtime": 1782000041.049611,
+    "ast_hash": "7a82d791d58327fda22bce3f0f2d2319",
+    "semantic_hash": ""
+  },
+  "scripts/needle_bench_prompts.json": {
+    "mtime": 1782000018.0285606,
+    "ast_hash": "1d082907b45d02f67ec9b22820eddd71",
+    "semantic_hash": ""
+  },
+  "scripts/needle_bridge_adapter.py": {
+    "mtime": 1782000041.0495687,
+    "ast_hash": "5527a5e3651d03f5886be0a9aed0886d",
+    "semantic_hash": ""
+  },
+  "scripts/needle_routing_stats.py": {
+    "mtime": 1782000024.988663,
+    "ast_hash": "a21ac0fd6d04c6093081d9022e398eb7",
+    "semantic_hash": ""
+  },
+  "scripts/test_needle_bridge_adapter.py": {
+    "mtime": 1782000050.4539883,
+    "ast_hash": "61c1c337cbcab1b1212fe3a5e110ce1f",
+    "semantic_hash": ""
+  },
+  "scripts/test_needle_routing_stats.py": {
+    "mtime": 1782000057.9599192,
+    "ast_hash": "a6b32eeab187ef8b40e28728faef2ff6",
+    "semantic_hash": ""
+  },
+  ".remember/archive.md": {
+    "mtime": 1781950284.421864,
+    "ast_hash": "0214bbfde9821c9e2f2cab34d5191937",
+    "semantic_hash": ""
+  },
+  ".remember/recent.md": {
+    "mtime": 1781950284.4187133,
+    "ast_hash": "4c6fe56c71077e515c5e156a1b12ed06",
+    "semantic_hash": ""
+  },
+  ".remember/remember.md": {
+    "mtime": 1781999803.4612324,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": ""
+  },
+  ".remember/today-2026-06-18.done.md": {
+    "mtime": 1781783343.360335,
+    "ast_hash": "cc02a6396244e0f0e432f57491114f32",
+    "semantic_hash": ""
+  },
+  ".remember/today-2026-06-19.done.md": {
+    "mtime": 1781875266.8431847,
+    "ast_hash": "7867c653ff3dd2e21cc43abcd534fc0b",
+    "semantic_hash": ""
+  },
+  ".remember/today-2026-06-20.md": {
+    "mtime": 1781999248.6503804,
+    "ast_hash": "a35a0c90e5b6cb6737562aca8ed84362",
     "semantic_hash": ""
   }
 }

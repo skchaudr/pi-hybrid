@@ -16,6 +16,12 @@ import sys
 from pathlib import Path
 from typing import Any
 
+_SCRIPTS_DIR = Path(__file__).resolve().parent
+if str(_SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(_SCRIPTS_DIR))
+
+from needle_routing_stats import classify_forward_verb, record_routing_event
+
 DEFAULT_NEEDLE_ROUTE = Path.home() / ".pi" / "needle" / "pi-route"
 DEFAULT_NEEDLE_URL = "http://100.93.242.91:9090"
 DEFAULT_PI_CMD = "pi"
@@ -277,6 +283,12 @@ def handle_send_prompt(request_id: int, params: dict[str, Any]) -> dict[str, Any
     route = call_needle_route(prompt)
 
     if should_forward(route):
+        record_routing_event(
+            decision="forward",
+            verb=classify_forward_verb(route),
+            route=route,
+            prompt_preview=prompt,
+        )
         try:
             result = forward_to_pi(prompt, workspace)
         except Exception as exc:  # noqa: BLE001 - surface adapter failures to client
@@ -284,6 +296,12 @@ def handle_send_prompt(request_id: int, params: dict[str, Any]) -> dict[str, Any
         return rpc_success(request_id, result)
 
     verb = str(route.get("name"))
+    record_routing_event(
+        decision="local",
+        verb=verb,
+        route=route,
+        prompt_preview=prompt,
+    )
     arguments = route.get("arguments") or {}
     if not isinstance(arguments, dict):
         arguments = {}

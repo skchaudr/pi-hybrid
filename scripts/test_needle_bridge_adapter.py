@@ -68,6 +68,7 @@ class NeedleBridgeAdapterTests(unittest.TestCase):
         self.workspace = Path(self.temp_dir.name)
         self.env = os.environ.copy()
         self.env["WORKSPACE"] = str(self.workspace)
+        self.env["NEEDLE_USAGE_LOGGING"] = "0"
 
     def tearDown(self) -> None:
         self.temp_dir.cleanup()

@@ -266,6 +266,7 @@ impl Agent {
     }
 
     /// Process a user prompt through the agent loop.
+    /// Calls the bridge to produce the prompt response.
     #[instrument(skip(self), fields(prompt_length = prompt.len()))]
     pub async fn process_prompt(&mut self, prompt: &str) {
         let _ = self.output_tx.send(AgentOutput::Thinking);
