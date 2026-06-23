@@ -1,0 +1,322 @@
+{
+  "version": 1,
+  "description": "Curated Needle routing benchmark prompts for my-pi-hybrid",
+  "workspace": ".",
+  "prompts": [
+    {
+      "id": 1,
+      "prompt": "read the file AGENTS.md",
+      "expected_verb": "read_file",
+      "category": "read_file",
+      "notes": "Canonical verified case"
+    },
+    {
+      "id": 2,
+      "prompt": "show me scripts/needle_bridge_adapter.py",
+      "expected_verb": "read_file",
+      "category": "read_file",
+      "notes": "Implicit read, explicit path"
+    },
+    {
+      "id": 3,
+      "prompt": "open rust-core/src/agent/mod.rs",
+      "expected_verb": "read_file",
+      "category": "read_file",
+      "notes": "open = read"
+    },
+    {
+      "id": 4,
+      "prompt": "what's in docs/operator.md?",
+      "expected_verb": "read_file",
+      "category": "read_file",
+      "notes": "Question form, still a read"
+    },
+    {
+      "id": 5,
+      "prompt": "dump the contents of Cargo.toml",
+      "expected_verb": "read_file",
+      "category": "read_file",
+      "notes": "Root workspace file"
+    },
+    {
+      "id": 6,
+      "prompt": "read rust-core/src/agent/bridge_client.rs",
+      "expected_verb": "read_file",
+      "category": "read_file",
+      "notes": "Core wiring file"
+    },
+    {
+      "id": 7,
+      "prompt": "display docs/architecture.md",
+      "expected_verb": "read_file",
+      "category": "read_file",
+      "notes": "Synonym for read"
+    },
+    {
+      "id": 8,
+      "prompt": "pull up scripts/test_needle_bridge_adapter.py",
+      "expected_verb": "read_file",
+      "category": "read_file",
+      "notes": "Test file"
+    },
+    {
+      "id": 9,
+      "prompt": "show PHASE5_REPORT.md",
+      "expected_verb": "read_file",
+      "category": "read_file",
+      "notes": "Doc at repo root"
+    },
+    {
+      "id": 10,
+      "prompt": "read the graphify skill at .pi/agent/skills/graphify/SKILL.md",
+      "expected_verb": "read_file",
+      "category": "read_file",
+      "notes": "Nested path"
+    },
+    {
+      "id": 11,
+      "prompt": "what does tests/e2e_headless.py contain?",
+      "expected_verb": "read_file",
+      "category": "read_file",
+      "notes": "Read via question"
+    },
+    {
+      "id": 12,
+      "prompt": "open MISSION.md",
+      "expected_verb": "read_file",
+      "category": "read_file",
+      "notes": "Mission doc"
+    },
+    {
+      "id": 13,
+      "prompt": "read docs/benchmarks.md",
+      "expected_verb": "read_file",
+      "category": "read_file",
+      "notes": "Existing bench doc"
+    },
+    {
+      "id": 14,
+      "prompt": "show me the first part of rust-core/src/bridge/json_rpc.rs",
+      "expected_verb": "read_file",
+      "category": "read_file",
+      "notes": "Partial read — still read_file"
+    },
+    {
+      "id": 15,
+      "prompt": "search for BridgeClient in rust-core",
+      "expected_verb": "search_code",
+      "category": "search_code",
+      "notes": "Symbol grep"
+    },
+    {
+      "id": 16,
+      "prompt": "grep for process_prompt in the codebase",
+      "expected_verb": "search_code",
+      "category": "search_code",
+      "notes": "Explicit grep intent"
+    },
+    {
+      "id": 17,
+      "prompt": "find all usages of send_prompt",
+      "expected_verb": "search_code",
+      "category": "search_code",
+      "notes": "Symbol search"
+    },
+    {
+      "id": 18,
+      "prompt": "where is PI_BRIDGE_COMMAND read?",
+      "expected_verb": "search_code",
+      "category": "search_code",
+      "notes": "Env/config lookup"
+    },
+    {
+      "id": 19,
+      "prompt": "search for should_forward in scripts/",
+      "expected_verb": "search_code",
+      "category": "search_code",
+      "notes": "Scoped search"
+    },
+    {
+      "id": 20,
+      "prompt": "find references to needle_route in the repo",
+      "expected_verb": "search_code",
+      "category": "search_code",
+      "notes": "Cross-repo symbol"
+    },
+    {
+      "id": 21,
+      "prompt": "grep for LOCAL_VERBS",
+      "expected_verb": "search_code",
+      "category": "search_code",
+      "notes": "Constant hunt"
+    },
+    {
+      "id": 22,
+      "prompt": "search for json_rpc in rust-core/src",
+      "expected_verb": "search_code",
+      "category": "search_code",
+      "notes": "Module search"
+    },
+    {
+      "id": 23,
+      "prompt": "where do we handle send_prompt in the adapter?",
+      "expected_verb": "search_code",
+      "category": "search_code",
+      "notes": "Function location"
+    },
+    {
+      "id": 24,
+      "prompt": "find all TODO comments in rust-core",
+      "expected_verb": "search_code",
+      "category": "search_code",
+      "notes": "Pattern search"
+    },
+    {
+      "id": 25,
+      "prompt": "search for spawn_agent across the project",
+      "expected_verb": "search_code",
+      "category": "search_code",
+      "notes": "Agent entry point"
+    },
+    {
+      "id": 26,
+      "prompt": "grep for SessionStore in rust-core",
+      "expected_verb": "search_code",
+      "category": "search_code",
+      "notes": "Storage layer"
+    },
+    {
+      "id": 27,
+      "prompt": "add a comment above process_prompt explaining it calls the bridge",
+      "expected_verb": "edit_file",
+      "category": "edit_file",
+      "notes": "Small doc edit"
+    },
+    {
+      "id": 28,
+      "prompt": "change the default NEEDLE_ROUTE_TIMEOUT to 60 in the adapter",
+      "expected_verb": "edit_file",
+      "category": "edit_file",
+      "notes": "Config constant"
+    },
+    {
+      "id": 29,
+      "prompt": "add error logging when pi-route returns empty stdout",
+      "expected_verb": "edit_file",
+      "category": "edit_file",
+      "notes": "Adapter improvement"
+    },
+    {
+      "id": 30,
+      "prompt": "update AGENTS.md to mention the needle benchmark",
+      "expected_verb": "edit_file",
+      "category": "edit_file",
+      "notes": "Doc edit"
+    },
+    {
+      "id": 31,
+      "prompt": "patch bridge_client.rs to log latency on send_prompt",
+      "expected_verb": "edit_file",
+      "category": "edit_file",
+      "notes": "Rust instrumentation"
+    },
+    {
+      "id": 32,
+      "prompt": "create docs/needle-bench.md with a one-line stub",
+      "expected_verb": "edit_file",
+      "category": "edit_file",
+      "notes": "New file"
+    },
+    {
+      "id": 33,
+      "prompt": "add a unit test for extract_last_user_prompt with list content",
+      "expected_verb": "edit_file",
+      "category": "edit_file",
+      "notes": "Test addition"
+    },
+    {
+      "id": 34,
+      "prompt": "fix any typos you find in docs/operator.md",
+      "expected_verb": "edit_file",
+      "category": "edit_file",
+      "notes": "Open-ended edit"
+    },
+    {
+      "id": 35,
+      "prompt": "run cargo test -p rust-core",
+      "expected_verb": "run_shell",
+      "category": "run_shell",
+      "notes": "Standard verify loop"
+    },
+    {
+      "id": 36,
+      "prompt": "run cargo clippy -p rust-core -- -D warnings",
+      "expected_verb": "run_shell",
+      "category": "run_shell",
+      "notes": "Lint"
+    },
+    {
+      "id": 37,
+      "prompt": "run python3 scripts/test_needle_bridge_adapter.py -v",
+      "expected_verb": "run_shell",
+      "category": "run_shell",
+      "notes": "Adapter tests"
+    },
+    {
+      "id": 38,
+      "prompt": "run cargo build -p rust-core",
+      "expected_verb": "run_shell",
+      "category": "run_shell",
+      "notes": "Build"
+    },
+    {
+      "id": 39,
+      "prompt": "git status",
+      "expected_verb": "run_shell",
+      "category": "run_shell",
+      "notes": "Shell, not read"
+    },
+    {
+      "id": 40,
+      "prompt": "curl -s http://100.93.242.91:9090/health",
+      "expected_verb": "run_shell",
+      "category": "run_shell",
+      "notes": "External daemon check"
+    },
+    {
+      "id": 41,
+      "prompt": "spawn a subagent to review bridge_client.rs",
+      "expected_verb": "delegate",
+      "category": "delegate",
+      "notes": "Explicit delegate"
+    },
+    {
+      "id": 42,
+      "prompt": "delegate a code review of the needle adapter changes to a reviewer",
+      "expected_verb": "delegate",
+      "category": "delegate",
+      "notes": "Review delegation"
+    },
+    {
+      "id": 43,
+      "prompt": "read AGENTS.md and summarize the graphify rules in plain English",
+      "expected_verb": "forward",
+      "category": "ambiguous",
+      "notes": "Read + synthesis — trap for false local route"
+    },
+    {
+      "id": 44,
+      "prompt": "find where process_prompt is wired and add a log line there",
+      "expected_verb": "forward",
+      "category": "ambiguous",
+      "notes": "Search + edit — trap"
+    },
+    {
+      "id": 45,
+      "prompt": "how does the bridge adapter decide whether to forward to Pi?",
+      "expected_verb": "forward",
+      "category": "ambiguous",
+      "notes": "Explanation, not a file dump"
+    }
+  ]
+}

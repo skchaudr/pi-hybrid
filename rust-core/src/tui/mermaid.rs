@@ -725,4 +725,39 @@ sequence
         widget.prev_diagram();
         assert_eq!(widget.active_index, 1);
     }
+    #[test]
+    fn content_does_not_overlap_borders() {
+        let text = r#"
+```mermaid
+flowchart LR
+    A[Start a very long node name to ensure it doesn't overlap] --> B[End]
+```
+"#;
+        let diagrams = extract_mermaid_blocks(text);
+        let widget = MermaidWidget::new(diagrams);
+        let backend = ratatui::backend::TestBackend::new(80, 20);
+        let mut terminal = ratatui::Terminal::new(backend).expect("terminal");
+        let area = ratatui::layout::Rect::new(0, 0, 80, 20);
+        terminal
+            .draw(|frame| {
+                widget.render(frame, area);
+            })
+            .expect("draw");
+        let buffer = terminal.backend().buffer();
+
+        for y in 0..20 {
+            let left = buffer[(0, y)].symbol();
+            let right = buffer[(79, y)].symbol();
+            if y == 0 {
+                assert_eq!(left, "┌");
+                assert_eq!(right, "┐");
+            } else if y == 19 {
+                assert_eq!(left, "└");
+                assert_eq!(right, "┘");
+            } else {
+                assert_eq!(left, "│");
+                assert_eq!(right, "│");
+            }
+        }
+    }
 }

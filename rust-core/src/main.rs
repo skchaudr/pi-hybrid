@@ -189,11 +189,34 @@ impl App {
     }
 
     fn cycle_pane(&mut self) {
-        self.active_pane = self.active_pane.next();
+        loop {
+            self.active_pane = self.active_pane.next();
+            if self.pane_visible(self.active_pane) {
+                break;
+            }
+        }
+    }
+
+    fn pane_visible(&self, pane: Pane) -> bool {
+        match pane {
+            Pane::Files => self.toggles.show_file_tree,
+            Pane::Agents => self.toggles.show_agent_pane,
+            Pane::Editor | Pane::PlanApproval => true,
+        }
     }
 
     fn quit(&mut self) {
         self.should_quit = true;
+    }
+
+    fn resolve_key_action(&mut self, key: crossterm::event::KeyEvent) -> Option<Action> {
+        if self.command_palette.is_open() {
+            self.keybindings.handle_palette_key(key)
+        } else if self.help_popup.is_open() {
+            self.keybindings.handle_overlay_key(key)
+        } else {
+            self.keybindings.handle_key(key, self.active_pane)
+        }
     }
 
     fn focus_at(&mut self, column: u16, row: u16, layout: &ScreenLayout) {
@@ -733,11 +756,7 @@ fn run(
         if event::poll(Duration::from_millis(200))? {
             match event::read()? {
                 Event::Key(key) if key.kind == KeyEventKind::Press => {
-                    let action = if app.command_palette.is_open() {
-                        app.keybindings.handle_palette_key(key)
-                    } else {
-                        app.keybindings.handle_key(key, app.active_pane)
-                    };
+                    let action = app.resolve_key_action(key);
                     if let Some(action) = action {
                         if app.command_palette.is_open() {
                             app.handle_palette_action(action);
@@ -922,6 +941,22 @@ fn current_git_branch() -> Option<String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use ratatui::backend::TestBackend;
+
+    fn render_app_to_string(app: &App, width: u16, height: u16) -> String {
+        let backend = TestBackend::new(width, height);
+        let mut terminal = Terminal::new(backend).expect("terminal creation");
+        terminal
+            .draw(|frame| {
+                let layout = layout_for(frame.area(), &app.toggles);
+                draw(frame, app, layout);
+            })
+            .expect("draw");
+        let buffer = terminal.backend().buffer();
+        (0..buffer.area().height)
+            .flat_map(|y| (0..buffer.area().width).map(move |x| buffer[(x, y)].symbol()))
+            .collect()
+    }
 
     #[test]
     fn tab_cycles_through_all_panes_and_wraps() {
@@ -938,6 +973,54 @@ mod tests {
         assert_eq!(app.active_pane, Pane::PlanApproval);
         app.cycle_pane();
         assert_eq!(app.active_pane, Pane::Files);
+        app.cycle_pane();
+        assert_eq!(app.active_pane, Pane::Editor);
+    }
+
+    #[test]
+    fn help_overlay_swallows_global_shortcuts_and_closes_on_q() {
+        use crossterm::event::{KeyCode, KeyEvent, KeyModifiers};
+
+        let mut app = App::new(
+            PathBuf::from("."),
+            config::PiConfig::default(),
+            CancelToken::new(),
+        );
+        let key = |code| KeyEvent::new(code, KeyModifiers::empty());
+
+        app.help_popup.open();
+
+        // 'j'/'k' must not scroll the background pane while help is open.
+        assert_eq!(app.resolve_key_action(key(KeyCode::Char('j'))), None);
+        assert_eq!(app.resolve_key_action(key(KeyCode::Char('k'))), None);
+
+        // 'q' closes the overlay instead of quitting the app.
+        assert_eq!(
+            app.resolve_key_action(key(KeyCode::Char('q'))),
+            Some(Action::CloseOverlay)
+        );
+        app.handle_action(
+            Action::CloseOverlay,
+            &layout_for(Rect::new(0, 0, 80, 24), &app.toggles),
+        );
+        assert!(!app.help_popup.is_open());
+        assert!(!app.should_quit);
+    }
+
+    #[test]
+    fn tab_cycle_skips_hidden_panes() {
+        let mut app = App::new(
+            PathBuf::from("."),
+            config::PiConfig::default(),
+            CancelToken::new(),
+        );
+        let layout = layout_for(Rect::new(0, 0, 120, 40), &app.toggles);
+        app.handle_action(Action::ToggleFileTree, &layout);
+        app.handle_action(Action::ToggleAgentPane, &layout);
+
+        assert_eq!(app.active_pane, Pane::Editor);
+        app.cycle_pane();
+        assert_eq!(app.active_pane, Pane::PlanApproval);
         app.cycle_pane();
         assert_eq!(app.active_pane, Pane::Editor);
     }
@@ -1032,5 +1115,42 @@ mod tests {
             app.command_palette.visible_commands()[0].name,
             "Run Bridge Test"
         );
+    }
+
+    #[test]
+    fn overlay_actions_render_and_close_without_terminal_input() {
+        let mut app = App::new(
+            PathBuf::from("."),
+            config::PiConfig::default(),
+            CancelToken::new(),
+        );
+        let layout = layout_for(Rect::new(0, 0, 120, 40), &app.toggles);
+
+        let initial = render_app_to_string(&app, 120, 40);
+        assert!(initial.contains("Pi Hybrid v0.1.0"));
+
+        app.handle_action(Action::OpenCommandPalette, &layout);
+        let palette = render_app_to_string(&app, 120, 40);
+        assert!(
+            palette.contains("Run Bridge Test"),
+            "palette render did not include command:\n{palette}"
+        );
+
+        app.handle_action(Action::CloseOverlay, &layout);
+        let closed_palette = render_app_to_string(&app, 120, 40);
+        assert!(!closed_palette.contains("Run Bridge Test"));
+
+        app.handle_action(Action::OpenHelp, &layout);
+        let help = render_app_to_string(&app, 120, 40);
+        assert!(help.contains("Help"));
+        assert!(help.contains("Navigation"));
+        assert!(help.contains("q: quit"));
+
+        app.handle_action(Action::CloseOverlay, &layout);
+        let closed_help = render_app_to_string(&app, 120, 40);
+        assert!(!closed_help.contains("Navigation"));
+
+        app.handle_action(Action::Quit, &layout);
+        assert!(app.should_quit);
     }
 }

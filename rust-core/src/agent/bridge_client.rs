@@ -6,7 +6,7 @@
 //! Wraps the existing `bridge::Bridge` in an async-friendly interface.
 
 use std::sync::Arc;
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 use anyhow::Context;
 use serde::{Deserialize, Serialize};
@@ -137,7 +137,7 @@ impl BridgeClient {
     #[instrument(skip(command))]
     pub async fn connect(command: &str) -> anyhow::Result<Self> {
         info!(%command, "Connecting to bridge");
-        let bridge = Bridge::new(command)
+        let bridge = Bridge::with_timeout(command, DEFAULT_TIMEOUT)
             .await
             .context("Failed to start bridge process")?;
 
@@ -160,7 +160,7 @@ impl BridgeClient {
         provider: ProviderConfig,
     ) -> anyhow::Result<Self> {
         info!("Connecting to bridge with provider");
-        let bridge = Bridge::new(command)
+        let bridge = Bridge::with_timeout(command, DEFAULT_TIMEOUT)
             .await
             .context("Failed to start bridge process")?;
 
@@ -248,23 +248,28 @@ impl BridgeClient {
 
         debug!("Sending prompt via bridge");
 
+        let started = Instant::now();
         let result = timeout(
             DEFAULT_TIMEOUT,
             self.bridge.call("send_prompt", params_value),
         )
         .await
         .context("send_prompt timed out")??;
+        let latency_ms = started.elapsed().as_millis() as u64;
 
         let response: PromptResponse =
             serde_json::from_value(result).context("Failed to parse prompt response")?;
 
         if let Some(ref usage) = response.usage {
             debug!(
+                latency_ms,
                 prompt_tokens = usage.prompt_tokens,
                 completion_tokens = usage.completion_tokens,
                 total_tokens = usage.total_tokens,
                 "Prompt completed"
             );
+        } else {
+            debug!(latency_ms, "Prompt completed");
         }
 
         Ok(response)
@@ -418,7 +423,7 @@ impl BridgeClient {
         warn!(attempt = self.reconnect_attempts, "Reconnecting to bridge");
 
         // Dropping the old bridge will kill the child process
-        let bridge = Bridge::new(command)
+        let bridge = Bridge::with_timeout(command, DEFAULT_TIMEOUT)
             .await
             .context("Failed to reconnect bridge")?;
 
@@ -581,6 +586,43 @@ mod tests {
     #[test]
     fn default_timeout_is_30_seconds() {
         assert_eq!(DEFAULT_TIMEOUT, Duration::from_secs(30));
+    }
+
+    /// Regression: Bridge::new() uses a 2s read timeout; connect paths must pass
+    /// BridgeClient::DEFAULT_TIMEOUT (30s) so slow real responses aren't cut off early.
+    #[tokio::test]
+    async fn connect_uses_client_default_timeout() {
+        let mock = concat!(
+            "sh -c 'sleep 3; ",
+            "printf \"{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":1,\\\"result\\\":[\\\"ok\\\"]}\\n\"'",
+        );
+        let mut client = BridgeClient::connect(mock).await.unwrap();
+        let skills = client.list_skills().await;
+
+        assert!(
+            skills.is_ok(),
+            "3s mock response should succeed with 30s bridge timeout, got {:?}",
+            skills.err()
+        );
+        assert_eq!(skills.unwrap(), vec!["ok".to_string()]);
+    }
+
+    #[tokio::test]
+    async fn reconnect_uses_client_default_timeout() {
+        let mock = concat!(
+            "sh -c 'sleep 3; ",
+            "printf \"{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":1,\\\"result\\\":[\\\"ok\\\"]}\\n\"'",
+        );
+        let mut client = BridgeClient::connect("true").await.unwrap();
+        client.reconnect(mock).await.unwrap();
+        let skills = client.list_skills().await;
+
+        assert!(
+            skills.is_ok(),
+            "3s mock response after reconnect should succeed with 30s bridge timeout, got {:?}",
+            skills.err()
+        );
+        assert_eq!(skills.unwrap(), vec!["ok".to_string()]);
     }
 
     #[test]

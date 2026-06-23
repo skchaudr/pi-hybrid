@@ -32,14 +32,18 @@ def remaining(deadline: float) -> float:
 
 def process_snapshot(label: str) -> None:
     print(f"\n--- process snapshot: {label} ---")
-    result = subprocess.run(
-        ["ps", "-axo", "pid,ppid,etime,%cpu,%mem,command"],
-        cwd=ROOT,
-        text=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
-        check=False,
-    )
+    try:
+        result = subprocess.run(
+            ["ps", "-axo", "pid,ppid,etime,%cpu,%mem,command"],
+            cwd=ROOT,
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            check=False,
+        )
+    except PermissionError as exc:
+        print(f"(process snapshot unavailable: {exc})")
+        return
     terms = [
         "rust-core",
         "target/debug/rust-core",

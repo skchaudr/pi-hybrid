@@ -96,13 +96,28 @@ impl KeyBindings {
     }
 
     pub fn handle_palette_key(&mut self, key: KeyEvent) -> Option<Action> {
+        if key.modifiers.contains(KeyModifiers::CONTROL) && key.code == KeyCode::Char('p') {
+            return Some(Action::CloseOverlay);
+        }
         match key.code {
             KeyCode::Esc => Some(Action::CloseOverlay),
             KeyCode::Enter => Some(Action::PaletteConfirm),
             KeyCode::Backspace => Some(Action::PaletteBackspace),
             KeyCode::Char('j') | KeyCode::Down => Some(Action::MoveDown),
             KeyCode::Char('k') | KeyCode::Up => Some(Action::MoveUp),
-            KeyCode::Char(character) => Some(Action::PaletteInput(character)),
+            KeyCode::Char(character)
+                if key.modifiers.is_empty() || key.modifiers == KeyModifiers::SHIFT =>
+            {
+                Some(Action::PaletteInput(character))
+            }
+            _ => None,
+        }
+    }
+
+    pub fn handle_overlay_key(&mut self, key: KeyEvent) -> Option<Action> {
+        match key.code {
+            KeyCode::Esc => Some(Action::CloseOverlay),
+            KeyCode::Char('q') if key.modifiers.is_empty() => Some(Action::CloseOverlay),
             _ => None,
         }
     }
@@ -181,6 +196,42 @@ mod tests {
             bindings.handle_key(key(KeyCode::Char('a')), Pane::PlanApproval),
             Some(Action::ApprovePlan)
         );
+    }
+
+    #[test]
+    fn ctrl_p_while_palette_open_closes_it_instead_of_typing() {
+        let mut bindings = KeyBindings::default();
+
+        assert_eq!(
+            bindings.handle_palette_key(KeyEvent::new(KeyCode::Char('p'), KeyModifiers::CONTROL)),
+            Some(Action::CloseOverlay)
+        );
+    }
+
+    #[test]
+    fn ctrl_modified_chars_are_not_typed_into_palette_input() {
+        let mut bindings = KeyBindings::default();
+
+        assert_eq!(
+            bindings.handle_palette_key(KeyEvent::new(KeyCode::Char('c'), KeyModifiers::CONTROL)),
+            None
+        );
+    }
+
+    #[test]
+    fn overlay_key_closes_on_q_and_esc_and_swallows_other_global_keys() {
+        let mut bindings = KeyBindings::default();
+
+        assert_eq!(
+            bindings.handle_overlay_key(key(KeyCode::Char('q'))),
+            Some(Action::CloseOverlay)
+        );
+        assert_eq!(
+            bindings.handle_overlay_key(key(KeyCode::Esc)),
+            Some(Action::CloseOverlay)
+        );
+        assert_eq!(bindings.handle_overlay_key(key(KeyCode::Char('j'))), None);
+        assert_eq!(bindings.handle_overlay_key(key(KeyCode::Char('k'))), None);
     }
 
     #[test]

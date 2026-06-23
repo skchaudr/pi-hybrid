@@ -20,6 +20,10 @@ impl HelpPopup {
         self.open = false;
     }
 
+    pub fn is_open(&self) -> bool {
+        self.open
+    }
+
     pub fn render(&self, frame: &mut Frame<'_>, area: Rect) {
         if !self.open {
             return;
@@ -250,5 +254,36 @@ mod tests {
         let popup = HelpPopup::default();
         let debug = format!("{:?}", popup);
         assert!(debug.contains("HelpPopup"));
+    }
+    #[test]
+    fn content_does_not_overlap_borders() {
+        let mut popup = HelpPopup::default();
+        popup.open = true;
+        let backend = TestBackend::new(80, 40);
+        let mut terminal = Terminal::new(backend).expect("terminal");
+        let area = Rect::new(0, 0, 80, 40);
+        terminal
+            .draw(|frame| {
+                popup.render(frame, area);
+            })
+            .expect("draw");
+        let buffer = terminal.backend().buffer();
+
+        let rect = centered_rect(58, 62, area);
+
+        for y in rect.y..rect.y + rect.height {
+            let left = buffer[(rect.x, y)].symbol();
+            let right = buffer[(rect.x + rect.width - 1, y)].symbol();
+            if y == rect.y {
+                assert_eq!(left, "┌");
+                assert_eq!(right, "┐");
+            } else if y == rect.y + rect.height - 1 {
+                assert_eq!(left, "└");
+                assert_eq!(right, "┘");
+            } else {
+                assert_eq!(left, "│");
+                assert_eq!(right, "│");
+            }
+        }
     }
 }

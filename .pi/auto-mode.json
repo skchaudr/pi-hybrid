@@ -1,5 +1,5 @@
 {
-  "enabled": false,
+  "enabled": true,
   "failOpen": true,
   "maxConsecutiveDenials": 3,
   "maxTotalDenials": 20,

@@ -133,6 +133,7 @@ pub fn list_workspace_files(root: &Path, limit: usize) -> Vec<FileEntry> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use ratatui::{Terminal, backend::TestBackend, layout::Rect};
 
     #[test]
     fn tree_navigation_clamps_to_bounds() {
@@ -319,6 +320,41 @@ mod tests {
         for entry in &entries {
             assert!(!entry.path.as_os_str().is_empty());
             assert!(!entry.display.is_empty());
+        }
+    }
+    #[test]
+    fn content_does_not_overlap_borders() {
+        let mut tree = FileTree::load(std::path::PathBuf::from("."));
+        tree.entries = vec![FileEntry {
+            path: std::path::PathBuf::from(
+                "a_very_long_file_name_that_could_overlap_borders_if_not_handled_properly.rs",
+            ),
+            display: "a_very_long_file_name_that_could_overlap_borders_if_not_handled_properly.rs"
+                .into(),
+        }];
+        let backend = TestBackend::new(80, 20);
+        let mut terminal = Terminal::new(backend).expect("terminal");
+        let area = Rect::new(0, 0, 80, 20);
+        terminal
+            .draw(|frame| {
+                tree.render(frame, area, Pane::Files);
+            })
+            .expect("draw");
+        let buffer = terminal.backend().buffer();
+
+        for y in 0..20 {
+            let left = buffer[(0, y)].symbol();
+            let right = buffer[(79, y)].symbol();
+            if y == 0 {
+                assert_eq!(left, "┌");
+                assert_eq!(right, "┐");
+            } else if y == 19 {
+                assert_eq!(left, "└");
+                assert_eq!(right, "┘");
+            } else {
+                assert_eq!(left, "│");
+                assert_eq!(right, "│");
+            }
         }
     }
 }

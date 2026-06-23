@@ -22,7 +22,7 @@ use anyhow::Context;
 use tokio::sync::{Mutex, mpsc};
 use tracing::{debug, error, info, instrument, trace, warn};
 
-use bridge_client::BridgeClient;
+use bridge_client::{BridgeClient, PromptMessage, PromptParams, default_system_prompt};
 use compaction::CompactionManager;
 use plan::{Plan, PlanManager, PlanStatus};
 use session::SessionStore;
@@ -205,6 +205,11 @@ impl Agent {
         });
 
         if let Some(prompt) = initial_prompt {
+            info!(
+                source = "initial_prompt",
+                prompt_length = prompt.len(),
+                "Dispatching prompt to process_prompt"
+            );
             self.process_prompt(&prompt).await;
         }
 
@@ -218,6 +223,11 @@ impl Agent {
             match self.input_rx.recv().await {
                 Some(AgentInput::UserPrompt(prompt)) => {
                     debug!(%prompt, "Received user prompt");
+                    info!(
+                        source = "user_prompt",
+                        prompt_length = prompt.len(),
+                        "Dispatching prompt to process_prompt"
+                    );
                     self.process_prompt(&prompt).await;
                 }
                 Some(AgentInput::ApprovePlan) => {
@@ -266,13 +276,12 @@ impl Agent {
     }
 
     /// Process a user prompt through the agent loop.
+    /// Calls the bridge to produce the prompt response.
     #[instrument(skip(self), fields(prompt_length = prompt.len()))]
     pub async fn process_prompt(&mut self, prompt: &str) {
         let _ = self.output_tx.send(AgentOutput::Thinking);
-        let mut turns = 0;
 
-        // Add user message to conversation
-        let mut conversation = vec![agent_loop::Message {
+        let conversation = vec![agent_loop::Message {
             role: "user".to_string(),
             content: prompt.to_string(),
             tool_calls: None,
@@ -289,9 +298,33 @@ impl Agent {
         }
         drop(compaction);
 
-        let _ = self.output_tx.send(AgentOutput::ResponseChunk(format!(
-            "Received: {prompt}. Use 'a' to approve, 'r' to reject a plan."
-        )));
+        let params = PromptParams {
+            model: self.config.model.clone(),
+            messages: conversation
+                .iter()
+                .map(|message| PromptMessage {
+                    role: message.role.clone(),
+                    content: message.content.clone(),
+                    tool_calls: None,
+                })
+                .collect(),
+            system: Some(default_system_prompt()),
+            max_tokens: None,
+            temperature: None,
+            tools: None,
+        };
+
+        match self.bridge.lock().await.send_prompt(&params).await {
+            Ok(response) => {
+                let _ = self
+                    .output_tx
+                    .send(AgentOutput::ResponseChunk(response.content));
+            }
+            Err(error) => {
+                error!(%error, "Bridge send_prompt failed");
+                let _ = self.output_tx.send(AgentOutput::Error(error.to_string()));
+            }
+        }
 
         // Store in session
         let session = self.session.lock().await;
@@ -483,5 +516,75 @@ mod tests {
         };
         assert_eq!(status.model, "test-model");
         assert!(status.running);
+    }
+
+    #[tokio::test]
+    async fn process_prompt_uses_bridge_response_not_hardcoded_echo() {
+        use tokio::sync::mpsc;
+
+        use crate::shutdown::CancelToken;
+
+        let fake_bridge = concat!(
+            "python3 -c '",
+            "import sys, json; ",
+            "req = json.loads(sys.stdin.readline()); ",
+            "result = {\"content\": \"Bridge response text\", \"tool_calls\": [], ",
+            "\"usage\": {\"prompt_tokens\": 5, \"completion_tokens\": 10, \"total_tokens\": 15}, ",
+            "\"finish_reason\": \"stop\"}; ",
+            "print(json.dumps({\"jsonrpc\": \"2.0\", \"id\": req[\"id\"], \"result\": result}), flush=True)",
+            "'"
+        );
+
+        let temp_dir = std::env::temp_dir().join(format!(
+            "pi-hybrid-process-prompt-test-{}",
+            std::process::id()
+        ));
+        std::fs::create_dir_all(&temp_dir).expect("temp dir should be created");
+        let db_path = temp_dir.join("sessions.db");
+        let db_path_str = db_path.to_string_lossy().to_string();
+
+        let config = AgentConfig {
+            bridge_command: fake_bridge.to_string(),
+            db_path: db_path_str,
+            ..AgentConfig::default()
+        };
+
+        let (_input_tx, input_rx) = mpsc::unbounded_channel();
+        let (output_tx, mut output_rx) = mpsc::unbounded_channel();
+        let cancel_token = CancelToken::new();
+
+        let mut agent = Agent::new(config, input_rx, output_tx, cancel_token)
+            .await
+            .expect("agent should initialize with fake bridge");
+
+        agent.process_prompt("hello from test").await;
+
+        let mut outputs = Vec::new();
+        while let Ok(output) = output_rx.try_recv() {
+            outputs.push(output);
+        }
+
+        let response_chunks: Vec<String> = outputs
+            .iter()
+            .filter_map(|output| match output {
+                AgentOutput::ResponseChunk(content) => Some(content.clone()),
+                _ => None,
+            })
+            .collect();
+
+        assert!(
+            response_chunks
+                .iter()
+                .any(|content| content.contains("Bridge response text")),
+            "expected bridge response content, got chunks: {response_chunks:?}"
+        );
+        assert!(
+            !response_chunks
+                .iter()
+                .any(|content| content.contains("Received: hello from test")),
+            "should not use hardcoded echo string"
+        );
+
+        let _ = std::fs::remove_dir_all(&temp_dir);
     }
 }
