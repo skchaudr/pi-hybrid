@@ -1,8 +1,7 @@
 target/
 .cargo-home/
 rust-core-temp/
-# graphify: commit handoff artifacts (graph.json, GRAPH_REPORT.md); ignore cache only
-graphify-out/cache/
+graphify-out/
 *.swp
 *.swo
 .DS_Store
